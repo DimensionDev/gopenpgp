@@ -30,8 +30,8 @@ thus requires Go 1.11+. If you're also using Go Modules, simply import it and
 start using it (see [Set up](#set-up)). If not, run:
 
 ```bash
-go get github.com/ProtonMail/gopenpgp # or git clone this repository into the following path
-cd $GOPATH/src/github.com/ProtonMail/gopenpgp
+go get github.com/DimensionDev/gopenpgp # or git clone this repository into the following path
+cd $GOPATH/src/github.com/DimensionDev/gopenpgp
 GO111MODULE=on go mod vendor
 ```
 
@@ -39,7 +39,7 @@ GO111MODULE=on go mod vendor
 
 ## Documentation
 
-https://godoc.org/github.com/ProtonMail/gopenpgp/crypto
+https://godoc.org/github.com/DimensionDev/gopenpgp/crypto
 
 ## Using with Go Mobile
 
@@ -79,13 +79,13 @@ The full documentation for this API is available here: https://godoc.org/gopkg.i
 ### Set up
 
 ```go
-import "github.com/ProtonMail/gopenpgp/crypto"
+import "github.com/DimensionDev/gopenpgp/crypto"
 ```
 
 ### Encrypt / Decrypt with password
 
 ```go
-import "github.com/ProtonMail/gopenpgp/helper"
+import "github.com/DimensionDev/gopenpgp/helper"
 
 const password = "my secret password"
 
@@ -98,8 +98,8 @@ message, err := helper.DecryptMessageWithToken(password, armor)
 
 To use more encryption algorithms:
 ```go
-import "github.com/ProtonMail/gopenpgp/constants"
-import "github.com/ProtonMail/gopenpgp/helper"
+import "github.com/DimensionDev/gopenpgp/constants"
+import "github.com/DimensionDev/gopenpgp/helper"
 
 // Encrypt data with password
 armor, err := helper.EncryptMessageWithTokenAlgo(password, "my message", constants.ThreeDES)
@@ -110,7 +110,7 @@ message, err := helper.DecryptMessageWithToken(password, armor)
 
 To encrypt binary data, reuse the key multiple times, or use more advanced modes:
 ```go
-import "github.com/ProtonMail/gopenpgp/constants"
+import "github.com/DimensionDev/gopenpgp/constants"
 
 var key = crypto.NewSymmetricKey("my secret password", constants.AES256)
 var message = crypto.NewPlainMessage(data)
@@ -127,7 +127,7 @@ decrypted, err := key.Decrypt(password, encrypted)
 ### Encrypt / Decrypt with PGP keys
 
 ```go
-import "github.com/ProtonMail/gopenpgp/helper"
+import "github.com/DimensionDev/gopenpgp/helper"
 
 // put keys in backtick (``) to avoid errors caused by spaces or tabs
 const pubkey = `-----BEGIN PGP PUBLIC KEY BLOCK-----

@@ -10,9 +10,9 @@ import (
 	"regexp"
 	"runtime"
 
-	"github.com/ProtonMail/gopenpgp/armor"
-	"github.com/ProtonMail/gopenpgp/constants"
-	"github.com/ProtonMail/gopenpgp/internal"
+	"github.com/DimensionDev/gopenpgp/armor"
+	"github.com/DimensionDev/gopenpgp/constants"
+	"github.com/DimensionDev/gopenpgp/internal"
 
 	"golang.org/x/crypto/openpgp/clearsign"
 	"golang.org/x/crypto/openpgp/packet"
@@ -43,14 +43,14 @@ type PGPSignature struct {
 // PGPSplitMessage contains a separate session key packet and symmetrically
 // encrypted data packet.
 type PGPSplitMessage struct {
-	DataPacket []byte
-	KeyPacket  []byte
+	rawDataPacket []byte
+	rawKeyPacket  []byte
 }
 
 // ClearTextMessage, split signed clear text message container
 type ClearTextMessage struct {
-	Data []byte
-	Signature []byte
+	Data         []byte
+	rawSignature []byte
 }
 
 // ---- GENERATORS -----
@@ -101,8 +101,8 @@ func NewPGPMessageFromArmored(armored string) (*PGPMessage, error) {
 // datapacket, and encryption algorithm.
 func NewPGPSplitMessage(keyPacket []byte, dataPacket []byte) *PGPSplitMessage {
 	return &PGPSplitMessage{
-		KeyPacket:  keyPacket,
-		DataPacket: dataPacket,
+		rawKeyPacket:  keyPacket,
+		rawDataPacket: dataPacket,
 	}
 }
 
@@ -144,8 +144,8 @@ func NewPGPSignatureFromArmored(armored string) (*PGPSignature, error) {
 // NewClearTextMessage generates a new ClearTextMessage from data and signature
 func NewClearTextMessage(data []byte, signature []byte) *ClearTextMessage {
 	return &ClearTextMessage{
-		Data:  data,
-		Signature: signature,
+		Data:         data,
+		rawSignature: signature,
 	}
 }
 
@@ -213,12 +213,12 @@ func (msg *PGPMessage) GetArmored() (string, error) {
 
 // GetDataPacket returns the unarmored binary datapacket as a []byte
 func (msg *PGPSplitMessage) GetDataPacket() []byte {
-	return msg.DataPacket
+	return msg.rawDataPacket
 }
 
 // GetKeyPacket returns the unarmored binary keypacket as a []byte
 func (msg *PGPSplitMessage) GetKeyPacket() []byte {
-	return msg.KeyPacket
+	return msg.rawKeyPacket
 }
 
 // SeparateKeyAndData returns the first keypacket and the (hopefully unique) dataPacket (not verified)
@@ -292,7 +292,7 @@ func (msg *PGPMessage) SeparateKeyAndData(estimatedLength, garbageCollector int)
 				symEncryptedData[5] = byte(actualLength)
 			}
 
-			outSplit.DataPacket = symEncryptedData
+			outSplit.rawDataPacket = symEncryptedData
 		}
 	}
 	if decryptErr != nil {
@@ -306,7 +306,7 @@ func (msg *PGPMessage) SeparateKeyAndData(estimatedLength, garbageCollector int)
 	if err := encryptedKey.Serialize(&buf); err != nil {
 		return nil, fmt.Errorf("gopenpgp: cannot serialize encrypted key: %v", err)
 	}
-	outSplit.KeyPacket = buf.Bytes()
+	outSplit.rawKeyPacket = buf.Bytes()
 
 	return outSplit, nil
 }
@@ -333,7 +333,7 @@ func (msg *ClearTextMessage) GetString() string {
 
 // GetSignature returns the unarmored binary signature as a []byte
 func (msg *ClearTextMessage) GetSignature() []byte {
-	return msg.Signature
+	return msg.rawSignature
 }
 
 // GetArmored armors plaintext and signature with the PGP SIGNED MESSAGE armoring

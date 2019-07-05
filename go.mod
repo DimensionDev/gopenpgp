@@ -1,4 +1,4 @@
-module github.com/ProtonMail/gopenpgp
+module github.com/DimensionDev/gopenpgp
 
 go 1.12
 

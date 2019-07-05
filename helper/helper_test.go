@@ -3,7 +3,7 @@ package helper
 import (
 	"testing"
 
-	"github.com/ProtonMail/gopenpgp/crypto"
+	"github.com/DimensionDev/gopenpgp/crypto"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -89,18 +89,25 @@ func TestArmoredTextMessageEncryptionVerification(t *testing.T) {
 func TestAttachmentEncryptionVerification(t *testing.T) {
 	var attachment = []byte("Secret file\r\nRoot password:hunter2")
 
-	keyPacket, dataPacket, signature, err := EncryptSignAttachment(
+	enctypedSignAttachmentData, err := EncryptSignAttachment(
 		readTestFile("keyring_publicKey", false),
 		readTestFile("keyring_privateKey", false),
 		testMailboxPassword, // Password defined in base_test
 		"password.txt",
 		attachment,
 	)
+	// keyPacket, dataPacket, signature, err := EncryptSignAttachment(
+	// 	readTestFile("keyring_publicKey", false),
+	// 	readTestFile("keyring_privateKey", false),
+	// 	testMailboxPassword, // Password defined in base_test
+	// 	"password.txt",
+	// 	attachment,
+	// )
 	if err != nil {
 		t.Fatal("Expected no error when encrypting, got:", err)
 	}
 
-	sig := crypto.NewPGPSignature(signature)
+	sig := crypto.NewPGPSignature(enctypedSignAttachmentData.Signature)
 	armoredSig, err := sig.GetArmored()
 	if err != nil {
 		t.Fatal("Expected no error when armoring signature, got:", err)
@@ -110,8 +117,8 @@ func TestAttachmentEncryptionVerification(t *testing.T) {
 		readTestFile("mime_publicKey", false), // Wrong public key
 		readTestFile("keyring_privateKey", false),
 		testMailboxPassword, // Password defined in base_test
-		keyPacket,
-		dataPacket,
+		enctypedSignAttachmentData.KeyPacket,
+		enctypedSignAttachmentData.DataPacket,
 		armoredSig,
 	)
 	assert.EqualError(t, err, "gopenpgp: unable to verify attachment")
@@ -120,8 +127,8 @@ func TestAttachmentEncryptionVerification(t *testing.T) {
 		readTestFile("keyring_publicKey", false),
 		readTestFile("keyring_privateKey", false),
 		testMailboxPassword, // Password defined in base_test
-		keyPacket,
-		dataPacket,
+		enctypedSignAttachmentData.KeyPacket,
+		enctypedSignAttachmentData.DataPacket,
 		armoredSig,
 	)
 	if err != nil {

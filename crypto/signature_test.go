@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/ProtonMail/gopenpgp/constants"
+	"github.com/DimensionDev/gopenpgp/constants"
 	"github.com/stretchr/testify/assert"
 )
 

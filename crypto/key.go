@@ -9,8 +9,8 @@ import (
 	"math/big"
 	"strings"
 
-	"github.com/ProtonMail/gopenpgp/armor"
-	"github.com/ProtonMail/gopenpgp/constants"
+	"github.com/DimensionDev/gopenpgp/armor"
+	"github.com/DimensionDev/gopenpgp/constants"
 
 	"golang.org/x/crypto/openpgp"
 	"golang.org/x/crypto/openpgp/packet"
