@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/ProtonMail/gopenpgp/constants"
+	"github.com/DimensionDev/gopenpgp/constants"
 
 	"golang.org/x/crypto/openpgp"
 	"golang.org/x/crypto/openpgp/packet"
@@ -47,15 +47,19 @@ func (symmetricKey *SymmetricKey) GetBase64Key() string {
 }
 
 func NewSymmetricKeyFromToken(passphrase, algo string) *SymmetricKey {
-	return NewSymmetricKey([]byte(passphrase), algo)
+	return &SymmetricKey{
+		[]byte(passphrase),
+		algo,
+	}
+	// return NewSymmetricKey([]byte(passphrase), algo)
 }
 
-func NewSymmetricKey(key []byte, algo string) *SymmetricKey {
-	return &SymmetricKey{
-		Key:  key,
-		Algo: algo,
-	}
-}
+// func NewSymmetricKey(key []byte, algo string) *SymmetricKey {
+// 	return &SymmetricKey{
+// 		Key:  key,
+// 		Algo: algo,
+// 	}
+// }
 
 func newSymmetricKeyFromEncrypted(ek *packet.EncryptedKey) (*SymmetricKey, error) {
 	var algo string
@@ -69,7 +73,11 @@ func newSymmetricKeyFromEncrypted(ek *packet.EncryptedKey) (*SymmetricKey, error
 		return nil, fmt.Errorf("gopenpgp: unsupported cipher function: %v", ek.CipherFunc)
 	}
 
-	return NewSymmetricKey(ek.Key, algo), nil
+	return &SymmetricKey{
+		ek.Key,
+		algo,
+	}, nil
+	// return NewSymmetricKey(ek.Key, algo), nil
 }
 
 // Encrypt encrypts a PlainMessage to PGPMessage with a SymmetricKey

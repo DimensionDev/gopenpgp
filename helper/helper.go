@@ -3,11 +3,17 @@ package helper
 import (
 	"errors"
 
-	"github.com/ProtonMail/gopenpgp/constants"
-	"github.com/ProtonMail/gopenpgp/crypto"
+	"github.com/DimensionDev/gopenpgp/constants"
+	"github.com/DimensionDev/gopenpgp/crypto"
 )
 
 var pgp = crypto.GetGopenPGP()
+
+type EncryptedSignAttachment struct {
+	KeyPacket  []byte
+	DataPacket []byte
+	Signature  []byte
+}
 
 // EncryptMessageWithToken encrypts a string with a passphrase using AES256
 func EncryptMessageWithToken(
@@ -176,7 +182,7 @@ func DecryptVerifyMessageArmored(
 func EncryptSignAttachment(
 	publicKey, privateKey, passphrase, fileName string,
 	plainData []byte,
-) (keyPacket, dataPacket, signature []byte, err error) {
+) (encryptedSignAttachment *EncryptedSignAttachment, err error) {
 	var publicKeyRing, privateKeyRing *crypto.KeyRing
 	var packets *crypto.PGPSplitMessage
 	var signatureObj *crypto.PGPSignature
@@ -184,26 +190,30 @@ func EncryptSignAttachment(
 	var binMessage = crypto.NewPlainMessage(plainData)
 
 	if publicKeyRing, err = pgp.BuildKeyRingArmored(publicKey); err != nil {
-		return nil, nil, nil, err
+		return nil, err
 	}
 
 	if privateKeyRing, err = pgp.BuildKeyRingArmored(privateKey); err != nil {
-		return nil, nil, nil, err
+		return nil, err
 	}
 
 	if err = privateKeyRing.UnlockWithPassphrase(passphrase); err != nil {
-		return nil, nil, nil, err
+		return nil, err
 	}
 
 	if packets, err = publicKeyRing.EncryptAttachment(binMessage, fileName); err != nil {
-		return nil, nil, nil, err
+		return nil, err
 	}
 
 	if signatureObj, err = privateKeyRing.SignDetached(binMessage); err != nil {
-		return nil, nil, nil, err
+		return nil, err
 	}
 
-	return packets.GetKeyPacket(), packets.GetDataPacket(), signatureObj.GetBinary(), nil
+	return &EncryptedSignAttachment{
+		KeyPacket:  packets.GetKeyPacket(),
+		DataPacket: packets.GetDataPacket(),
+		Signature:  signatureObj.GetBinary(),
+	}, nil
 }
 
 // DecryptVerifyAttachment decrypts and verifies an attachment split into the keyPacket, dataPacket

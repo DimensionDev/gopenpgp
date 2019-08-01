@@ -1,0 +1,22 @@
+{
+  "name": "DMSGopenpgp",
+  "version": "0.1.0",
+  "summary": "A short description of DMSGopenpgp.",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/jk234ert/DMSGopenpgp",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "jk234ert": "ugling88@hotmail.com"
+  },
+  "source": {
+    "git": "https://github.com/jk234ert/DMSGopenpgp.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "ios": "8.0"
+  },
+  "source_files": "DMSGopenpgp/Classes/**/*"
+}

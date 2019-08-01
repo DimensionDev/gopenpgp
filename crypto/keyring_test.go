@@ -8,7 +8,7 @@ import (
 
 	"golang.org/x/crypto/openpgp/armor"
 
-	"github.com/ProtonMail/gopenpgp/constants"
+	"github.com/DimensionDev/gopenpgp/constants"
 	"github.com/stretchr/testify/assert"
 )
 

@@ -16,7 +16,7 @@ import (
 	"golang.org/x/crypto/openpgp/packet"
 	xrsa "golang.org/x/crypto/rsa"
 
-	armorUtils "github.com/ProtonMail/gopenpgp/armor"
+	armorUtils "github.com/DimensionDev/gopenpgp/armor"
 )
 
 // KeyRing contains multiple private and public keys.
