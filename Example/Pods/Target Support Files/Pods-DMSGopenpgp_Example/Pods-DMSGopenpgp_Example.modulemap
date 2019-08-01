@@ -1,0 +1,6 @@
+framework module Pods_DMSGopenpgp_Example {
+  umbrella header "Pods-DMSGopenpgp_Example-umbrella.h"
+
+  export *
+  module * { export * }
+}

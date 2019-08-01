@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'DMSGopenpgp_Example' do
+  pod 'DMSGopenpgp', :path => '../'
+
+  target 'DMSGopenpgp_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end
