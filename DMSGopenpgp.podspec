@@ -11,8 +11,7 @@ Pod::Spec.new do |spec|
   spec.author             = { "jk234ert" => "ugling88@hotmail.com" }
 
   spec.ios.deployment_target = "9.0"
-  spec.source       = { :git => "https://github.com/DimensionDev/gopenpgp.git", :branch => "feat/gomobileReady
-  "}
+  spec.source       = { :git => "https://github.com/DimensionDev/gopenpgp.git", :tag => "#{spec.version}" }
 
   spec.header_dir = 'dist/iOS/DMSOpenPGP.framework/Headers'
   # spec.source_files  = "Classes", "Classes/**/*.{h,m}"
