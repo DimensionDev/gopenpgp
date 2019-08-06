@@ -73,6 +73,16 @@ class Tests: XCTestCase {
             
             let entity = try rsaKeyRing.getSigningEntity()
             let primaryKey = entity.primaryKey
+            XCTAssertEqual(primaryKey?.getFingerprint().uppercased(), "E42B2DA77D952A02AE982612BF56D1DCD6DAEE91")
+            
+            var bitsLength: Int = 0
+            try primaryKey?.getBitLength(UnsafeMutablePointer<Int>(&bitsLength))
+            XCTAssertEqual(bitsLength, 4096, "Wrong Bit Length")
+            
+            let algo = primaryKey?.getAlgorithm()
+            XCTAssertEqual(algo, CryptoPubKeyAlgoRSA, "Wrong Bit Length")
+            
+            entity
             
         } catch {
             XCTAssertTrue(false, "Fail to Enc/Dec binary data, error: \(error.localizedDescription)")

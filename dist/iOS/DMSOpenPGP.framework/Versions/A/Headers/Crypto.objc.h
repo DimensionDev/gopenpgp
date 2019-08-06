@@ -426,10 +426,10 @@ ready for encryption, signature, or verification from an unencrypted string.
 
 // skipped field PrivateKey.PrivateKey with unsupported type: golang.org/x/crypto/openpgp/packet.PrivateKey
 
-- (BOOL)bitLength:(long* _Nullable)bitLength error:(NSError* _Nullable* _Nullable)error;
 - (BOOL)decrypt:(NSData* _Nullable)passphrase error:(NSError* _Nullable* _Nullable)error;
 - (BOOL)encrypt:(NSData* _Nullable)passphrase error:(NSError* _Nullable* _Nullable)error;
 - (long)getAlgorithm;
+- (BOOL)getBitLength:(long* _Nullable)ret0_ error:(NSError* _Nullable* _Nullable)error;
 - (long)getCreationTimestamp;
 - (BOOL)getEncrypted;
 - (NSString* _Nonnull)getFingerprint;
@@ -452,9 +452,11 @@ ready for encryption, signature, or verification from an unencrypted string.
 - (nonnull instancetype)init;
 // skipped field PublicKey.PublicKey with unsupported type: golang.org/x/crypto/openpgp/packet.PublicKey
 
-- (BOOL)bitLength:(long* _Nullable)bitLength error:(NSError* _Nullable* _Nullable)error;
+// skipped method PublicKey.BitLength with unsupported parameter or return types
+
 - (BOOL)canSign;
 - (long)getAlgorithm;
+- (BOOL)getBitLength:(long* _Nullable)ret0_ error:(NSError* _Nullable* _Nullable)error;
 - (long)getCreationTimestamp;
 - (NSString* _Nonnull)getFingerprint;
 - (long)getKeyId;

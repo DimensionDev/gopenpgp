@@ -245,9 +245,10 @@ func (p *PublicKey) KeyIdShortString() string {
 	return p.KeyIdShortString()
 }
 
-func (p *PublicKey) BitLength() (bitLength int, err error) {
+func (p *PublicKey) GetBitLength() (int, error) {
 	rawBitLength, err := p.BitLength()
-	return int(rawBitLength), err
+	bits := int(rawBitLength)
+	return bits, err
 }
 
 type PrivateKey struct {
