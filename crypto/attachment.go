@@ -77,7 +77,7 @@ func (keyRing *KeyRing) newAttachmentProcessor(
 
 	var ew io.WriteCloser
 	var encryptErr error
-	ew, encryptErr = openpgp.Encrypt(writer, keyRing.entities, nil, hints, config)
+	ew, encryptErr = openpgp.Encrypt(writer, keyRing.getRawEntities(), nil, hints, config)
 	if encryptErr != nil {
 		return nil, encryptErr
 	}
@@ -115,7 +115,7 @@ func (keyRing *KeyRing) NewLowMemoryAttachmentProcessor(
 // DecryptAttachment takes a PGPSplitMessage, containing a session key packet and symmetrically encrypted data
 // and returns a decrypted PlainMessage
 func (keyRing *KeyRing) DecryptAttachment(message *PGPSplitMessage) (*PlainMessage, error) {
-	privKeyEntries := keyRing.entities
+	privKeyEntries := keyRing.getRawEntities()
 
 	keyReader := bytes.NewReader(message.GetKeyPacket())
 	dataReader := bytes.NewReader(message.GetDataPacket())

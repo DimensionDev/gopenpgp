@@ -6,17 +6,25 @@
 	objectVersion = 46;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		AA0559C4331FFB0A136D1F8FFBF5D6F6 /* DMSGopenpgp */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 69B3640A80DB4A0BEE88CCD0AE5AC087 /* Build configuration list for PBXAggregateTarget "DMSGopenpgp" */;
+			buildPhases = (
+			);
+			dependencies = (
+			);
+			name = DMSGopenpgp;
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
-		1532690C1DA2122800567CD954A3E497 /* Pods-DMSGopenpgp_Tests-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = BE929A38AC91DF00719C2D15C8109240 /* Pods-DMSGopenpgp_Tests-dummy.m */; };
-		3C284D09623431CD40EE58EB4CD35C3B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3212113385A8FBBDB272BD23C409FF61 /* Foundation.framework */; };
+		1532690C1DA2122800567CD954A3E497 /* Pods-DMSGopenpgp_Tests-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 136D2CC9D82F3C3287BA45137B58E8F1 /* Pods-DMSGopenpgp_Tests-dummy.m */; };
 		4AAF96F7805314A299CC76B01A990430 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3212113385A8FBBDB272BD23C409FF61 /* Foundation.framework */; };
-		4E37EA397160EDC087D9D425A46C9D85 /* DMSGopenpgp-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B92D2F7906B59376EE78948193C0841 /* DMSGopenpgp-dummy.m */; };
-		A28BC2A4CAFDC06D1BE1ECB19704D31C /* Pods-DMSGopenpgp_Tests-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 52BFA0BFF7C919A5F06B3F56FC160A1B /* Pods-DMSGopenpgp_Tests-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		ACD939B28DF3659B803F5C1E2FA5C50F /* DMSGopenpgp-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = C4FEA9ED5A165032C52C8E36ECCB4066 /* DMSGopenpgp-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		B093723030ED54CA34147F9568F6D9F6 /* ReplaceMe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43489DA67BD5A8415078A8D7AC8B55A2 /* ReplaceMe.swift */; };
+		A28BC2A4CAFDC06D1BE1ECB19704D31C /* Pods-DMSGopenpgp_Tests-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = D8E64E520E876A947E304172C60005C9 /* Pods-DMSGopenpgp_Tests-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C42C96482C095D84328FCE10A4C6C3FC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3212113385A8FBBDB272BD23C409FF61 /* Foundation.framework */; };
-		D842342ED7BA7FBCFF2AC6CF6206D7D1 /* Pods-DMSGopenpgp_Example-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = E2AE6744B013557167CFF22FC13E71C6 /* Pods-DMSGopenpgp_Example-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		F27317C099B1FDE88B0FBCAB99D7E6A5 /* Pods-DMSGopenpgp_Example-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 8B4C354464BC635D40793809DDDF7916 /* Pods-DMSGopenpgp_Example-dummy.m */; };
+		D842342ED7BA7FBCFF2AC6CF6206D7D1 /* Pods-DMSGopenpgp_Example-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = F40EFA8717B939941E53309D68D3B430 /* Pods-DMSGopenpgp_Example-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		F27317C099B1FDE88B0FBCAB99D7E6A5 /* Pods-DMSGopenpgp_Example-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 2E21B844F27270B892314F331E4BEB00 /* Pods-DMSGopenpgp_Example-dummy.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,38 +45,31 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		058ACF7F748247DAA254F1B4A22114A4 /* Pods-DMSGopenpgp_Example-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-DMSGopenpgp_Example-frameworks.sh"; sourceTree = "<group>"; };
-		160A4CF321A1C3B31A6ED7AF9F08DD2F /* Pods-DMSGopenpgp_Tests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-DMSGopenpgp_Tests.modulemap"; sourceTree = "<group>"; };
-		1D376C091CDD1DEA83CFD384B7BA77C2 /* Pods_DMSGopenpgp_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DMSGopenpgp_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		203E8B600AA5DFA49A3872A4D350CECE /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		21E624E2067AB012A2A2569B1E68C259 /* Pods-DMSGopenpgp_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-DMSGopenpgp_Example.release.xcconfig"; sourceTree = "<group>"; };
-		23476615D08A9C283934224B90F36033 /* DMSGopenpgp.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = DMSGopenpgp.xcconfig; sourceTree = "<group>"; };
+		081276E3B8EC036E8ACF51E0BE90F8D8 /* Pods-DMSGopenpgp_Tests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-DMSGopenpgp_Tests.modulemap"; sourceTree = "<group>"; };
+		12A3A6CA4788417CF4C29A638475DEA0 /* DMSOpenPGP.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DMSOpenPGP.framework; path = dist/iOS/DMSOpenPGP.framework; sourceTree = "<group>"; };
+		136A81E232AD1EB3ED6BA24212C56E90 /* Pods-DMSGopenpgp_Tests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-DMSGopenpgp_Tests-acknowledgements.plist"; sourceTree = "<group>"; };
+		136D2CC9D82F3C3287BA45137B58E8F1 /* Pods-DMSGopenpgp_Tests-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-DMSGopenpgp_Tests-dummy.m"; sourceTree = "<group>"; };
+		1D376C091CDD1DEA83CFD384B7BA77C2 /* Pods_DMSGopenpgp_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_DMSGopenpgp_Tests.framework; path = "Pods-DMSGopenpgp_Tests.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2E21B844F27270B892314F331E4BEB00 /* Pods-DMSGopenpgp_Example-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-DMSGopenpgp_Example-dummy.m"; sourceTree = "<group>"; };
 		3212113385A8FBBDB272BD23C409FF61 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.2.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
-		405FF41B93D6B722146F843F09CE2AD5 /* Pods-DMSGopenpgp_Example-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-DMSGopenpgp_Example-Info.plist"; sourceTree = "<group>"; };
-		43489DA67BD5A8415078A8D7AC8B55A2 /* ReplaceMe.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ReplaceMe.swift; path = DMSGopenpgp/Classes/ReplaceMe.swift; sourceTree = "<group>"; };
-		457E635CC6485EACCBD571371ADC16A2 /* Pods-DMSGopenpgp_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-DMSGopenpgp_Tests.debug.xcconfig"; sourceTree = "<group>"; };
-		52BFA0BFF7C919A5F06B3F56FC160A1B /* Pods-DMSGopenpgp_Tests-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-DMSGopenpgp_Tests-umbrella.h"; sourceTree = "<group>"; };
-		5802E026CB3CC1E22BE4CDE5EE17A1FB /* Pods_DMSGopenpgp_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DMSGopenpgp_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		58AC78EDB1AE1C1760964F92CBD5470D /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
-		5B92D2F7906B59376EE78948193C0841 /* DMSGopenpgp-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "DMSGopenpgp-dummy.m"; sourceTree = "<group>"; };
-		5C1169385D936316B5E2AB813DCE6780 /* Pods-DMSGopenpgp_Example-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-DMSGopenpgp_Example-acknowledgements.plist"; sourceTree = "<group>"; };
-		8B4C354464BC635D40793809DDDF7916 /* Pods-DMSGopenpgp_Example-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-DMSGopenpgp_Example-dummy.m"; sourceTree = "<group>"; };
-		8E911E738B5D12F08413510E5A864393 /* Pods-DMSGopenpgp_Tests-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-DMSGopenpgp_Tests-acknowledgements.markdown"; sourceTree = "<group>"; };
-		8E92A6235F4A797E518DF9B3E4B4640B /* DMSGopenpgp.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; path = DMSGopenpgp.podspec; sourceTree = "<group>"; tabWidth = 2; };
-		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
-		B7235E2A33848CEC85563FDC95D28F2F /* Pods-DMSGopenpgp_Example.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-DMSGopenpgp_Example.modulemap"; sourceTree = "<group>"; };
-		BE929A38AC91DF00719C2D15C8109240 /* Pods-DMSGopenpgp_Tests-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-DMSGopenpgp_Tests-dummy.m"; sourceTree = "<group>"; };
-		C4FEA9ED5A165032C52C8E36ECCB4066 /* DMSGopenpgp-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "DMSGopenpgp-umbrella.h"; sourceTree = "<group>"; };
-		C5A7354F8E7A618A9D173146DD4E005F /* DMSGopenpgp-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "DMSGopenpgp-prefix.pch"; sourceTree = "<group>"; };
-		D2D6F79F6BEFFA79FA9FDCC31C5DE487 /* Pods-DMSGopenpgp_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-DMSGopenpgp_Tests.release.xcconfig"; sourceTree = "<group>"; };
-		D3BCF5D5811C3919B06D5E6E68813AD4 /* Pods-DMSGopenpgp_Tests-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-DMSGopenpgp_Tests-Info.plist"; sourceTree = "<group>"; };
-		DC841C7A1E8D5BDEF69AFC4A97AB0B57 /* Pods-DMSGopenpgp_Example-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-DMSGopenpgp_Example-acknowledgements.markdown"; sourceTree = "<group>"; };
-		DF65CB601B384EFBFFA920E0176EDC13 /* Pods-DMSGopenpgp_Tests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-DMSGopenpgp_Tests-acknowledgements.plist"; sourceTree = "<group>"; };
-		E2AE6744B013557167CFF22FC13E71C6 /* Pods-DMSGopenpgp_Example-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-DMSGopenpgp_Example-umbrella.h"; sourceTree = "<group>"; };
-		E6015A7FBFD6434C30C23B3083C9E492 /* DMSGopenpgp-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "DMSGopenpgp-Info.plist"; sourceTree = "<group>"; };
-		EBA9B75D61D76F02180DD8FF79B08007 /* DMSGopenpgp.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = DMSGopenpgp.modulemap; sourceTree = "<group>"; };
-		EF3267E1F7CC99122540C1AAA91BCE4B /* DMSGopenpgp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = DMSGopenpgp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		F58FD346E8F10B4D08FD4F3A51612013 /* Pods-DMSGopenpgp_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-DMSGopenpgp_Example.debug.xcconfig"; sourceTree = "<group>"; };
+		3DB878DA475E8D87EF746AD51D27107C /* Pods-DMSGopenpgp_Example-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-DMSGopenpgp_Example-Info.plist"; sourceTree = "<group>"; };
+		4E970FAEB01A019FD5B99CC0B99C0629 /* Pods-DMSGopenpgp_Example-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-DMSGopenpgp_Example-acknowledgements.plist"; sourceTree = "<group>"; };
+		54F0FDFBC05F52877EB86CCB303F756F /* Pods-DMSGopenpgp_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-DMSGopenpgp_Example.release.xcconfig"; sourceTree = "<group>"; };
+		5802E026CB3CC1E22BE4CDE5EE17A1FB /* Pods_DMSGopenpgp_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_DMSGopenpgp_Example.framework; path = "Pods-DMSGopenpgp_Example.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5C9C3CB2C05EBCAAC7392F64FEEC30B1 /* README 2.md */ = {isa = PBXFileReference; includeInIndex = 1; path = "README 2.md"; sourceTree = "<group>"; };
+		6234242CEACA8ACD5EAD91E3D874C879 /* Pods-DMSGopenpgp_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-DMSGopenpgp_Tests.release.xcconfig"; sourceTree = "<group>"; };
+		684D890C7A8289DCEC47A06C512BD34E /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; path = LICENSE; sourceTree = "<group>"; };
+		6B90FC357146F92DB6E2AD3B3FF0AD83 /* Pods-DMSGopenpgp_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-DMSGopenpgp_Example.debug.xcconfig"; sourceTree = "<group>"; };
+		8591FD380131859FD34C148470DC40D7 /* Pods-DMSGopenpgp_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-DMSGopenpgp_Tests.debug.xcconfig"; sourceTree = "<group>"; };
+		88184324D75670880804DC1BB14F4FAE /* Pods-DMSGopenpgp_Tests-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-DMSGopenpgp_Tests-Info.plist"; sourceTree = "<group>"; };
+		9CAC914B83DDD12FD88BBEDB4FE474D5 /* Pods-DMSGopenpgp_Example-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-DMSGopenpgp_Example-acknowledgements.markdown"; sourceTree = "<group>"; };
+		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		A972C38EAFA1575AD0DE405A04C3869C /* DMSGopenpgp.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = DMSGopenpgp.xcconfig; sourceTree = "<group>"; };
+		B4CF60C3BE18D060D1F2FB2EF835C6A3 /* Pods-DMSGopenpgp_Example.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-DMSGopenpgp_Example.modulemap"; sourceTree = "<group>"; };
+		BF6059457D995083D6D16A78528C6BE9 /* Pods-DMSGopenpgp_Tests-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-DMSGopenpgp_Tests-acknowledgements.markdown"; sourceTree = "<group>"; };
+		D8E64E520E876A947E304172C60005C9 /* Pods-DMSGopenpgp_Tests-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-DMSGopenpgp_Tests-umbrella.h"; sourceTree = "<group>"; };
+		F40EFA8717B939941E53309D68D3B430 /* Pods-DMSGopenpgp_Example-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-DMSGopenpgp_Example-umbrella.h"; sourceTree = "<group>"; };
+		FEF5BFD84151F41962102F48562F3761 /* DMSGopenpgp.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; path = DMSGopenpgp.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,14 +78,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				4AAF96F7805314A299CC76B01A990430 /* Foundation.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		4B37AD93A14A758FCCEC29B7C1F92C48 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				3C284D09623431CD40EE58EB4CD35C3B /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -99,74 +92,79 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		1A1DAC8AC87CEC26499FFAEDEC110388 /* Pod */ = {
+		2978E22EAEE4B5EC03492BDDDC6B94AC /* Support Files */ = {
 			isa = PBXGroup;
 			children = (
-				8E92A6235F4A797E518DF9B3E4B4640B /* DMSGopenpgp.podspec */,
-				58AC78EDB1AE1C1760964F92CBD5470D /* LICENSE */,
-				203E8B600AA5DFA49A3872A4D350CECE /* README.md */,
+				A972C38EAFA1575AD0DE405A04C3869C /* DMSGopenpgp.xcconfig */,
 			);
-			name = Pod;
+			name = "Support Files";
+			path = "Example/Pods/Target Support Files/DMSGopenpgp";
 			sourceTree = "<group>";
 		};
-		1A4DF41ED079E68179838B77330CF257 /* Pods-DMSGopenpgp_Example */ = {
+		2D1C4446CD445C674DF961C133DBC3AE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				B7235E2A33848CEC85563FDC95D28F2F /* Pods-DMSGopenpgp_Example.modulemap */,
-				DC841C7A1E8D5BDEF69AFC4A97AB0B57 /* Pods-DMSGopenpgp_Example-acknowledgements.markdown */,
-				5C1169385D936316B5E2AB813DCE6780 /* Pods-DMSGopenpgp_Example-acknowledgements.plist */,
-				8B4C354464BC635D40793809DDDF7916 /* Pods-DMSGopenpgp_Example-dummy.m */,
-				058ACF7F748247DAA254F1B4A22114A4 /* Pods-DMSGopenpgp_Example-frameworks.sh */,
-				405FF41B93D6B722146F843F09CE2AD5 /* Pods-DMSGopenpgp_Example-Info.plist */,
-				E2AE6744B013557167CFF22FC13E71C6 /* Pods-DMSGopenpgp_Example-umbrella.h */,
-				F58FD346E8F10B4D08FD4F3A51612013 /* Pods-DMSGopenpgp_Example.debug.xcconfig */,
-				21E624E2067AB012A2A2569B1E68C259 /* Pods-DMSGopenpgp_Example.release.xcconfig */,
+				12A3A6CA4788417CF4C29A638475DEA0 /* DMSOpenPGP.framework */,
 			);
-			name = "Pods-DMSGopenpgp_Example";
-			path = "Target Support Files/Pods-DMSGopenpgp_Example";
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		35108B755D6D3ED442CEAAB2C8A942A1 /* Development Pods */ = {
 			isa = PBXGroup;
 			children = (
-				E142064113B5E88E565173718CFC10C5 /* DMSGopenpgp */,
+				FFF4CFD4D4DA4C0DA4116820EA3CF79B /* DMSGopenpgp */,
 			);
 			name = "Development Pods";
 			sourceTree = "<group>";
 		};
-		6B802E3522829C0602B85D753CB37026 /* Targets Support Files */ = {
+		3F5FB01486EBFA45F76C5C49333570E7 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				1A4DF41ED079E68179838B77330CF257 /* Pods-DMSGopenpgp_Example */,
-				9A5E8BC41B7555B764FDDB85C0C4E451 /* Pods-DMSGopenpgp_Tests */,
-			);
-			name = "Targets Support Files";
-			sourceTree = "<group>";
-		};
-		82D628B3E14D186CAE660A00BD67A8C1 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				EF3267E1F7CC99122540C1AAA91BCE4B /* DMSGopenpgp.framework */,
 				5802E026CB3CC1E22BE4CDE5EE17A1FB /* Pods_DMSGopenpgp_Example.framework */,
 				1D376C091CDD1DEA83CFD384B7BA77C2 /* Pods_DMSGopenpgp_Tests.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		9A5E8BC41B7555B764FDDB85C0C4E451 /* Pods-DMSGopenpgp_Tests */ = {
+		5BD4566320ACBAAF240C349739A1E464 /* Targets Support Files */ = {
 			isa = PBXGroup;
 			children = (
-				160A4CF321A1C3B31A6ED7AF9F08DD2F /* Pods-DMSGopenpgp_Tests.modulemap */,
-				8E911E738B5D12F08413510E5A864393 /* Pods-DMSGopenpgp_Tests-acknowledgements.markdown */,
-				DF65CB601B384EFBFFA920E0176EDC13 /* Pods-DMSGopenpgp_Tests-acknowledgements.plist */,
-				BE929A38AC91DF00719C2D15C8109240 /* Pods-DMSGopenpgp_Tests-dummy.m */,
-				D3BCF5D5811C3919B06D5E6E68813AD4 /* Pods-DMSGopenpgp_Tests-Info.plist */,
-				52BFA0BFF7C919A5F06B3F56FC160A1B /* Pods-DMSGopenpgp_Tests-umbrella.h */,
-				457E635CC6485EACCBD571371ADC16A2 /* Pods-DMSGopenpgp_Tests.debug.xcconfig */,
-				D2D6F79F6BEFFA79FA9FDCC31C5DE487 /* Pods-DMSGopenpgp_Tests.release.xcconfig */,
+				BE282F63DD509062DB7D16EEF818A671 /* Pods-DMSGopenpgp_Example */,
+				9F8919657722DCEEF449EF4F5EAF72D8 /* Pods-DMSGopenpgp_Tests */,
+			);
+			name = "Targets Support Files";
+			sourceTree = "<group>";
+		};
+		9F8919657722DCEEF449EF4F5EAF72D8 /* Pods-DMSGopenpgp_Tests */ = {
+			isa = PBXGroup;
+			children = (
+				081276E3B8EC036E8ACF51E0BE90F8D8 /* Pods-DMSGopenpgp_Tests.modulemap */,
+				BF6059457D995083D6D16A78528C6BE9 /* Pods-DMSGopenpgp_Tests-acknowledgements.markdown */,
+				136A81E232AD1EB3ED6BA24212C56E90 /* Pods-DMSGopenpgp_Tests-acknowledgements.plist */,
+				136D2CC9D82F3C3287BA45137B58E8F1 /* Pods-DMSGopenpgp_Tests-dummy.m */,
+				88184324D75670880804DC1BB14F4FAE /* Pods-DMSGopenpgp_Tests-Info.plist */,
+				D8E64E520E876A947E304172C60005C9 /* Pods-DMSGopenpgp_Tests-umbrella.h */,
+				8591FD380131859FD34C148470DC40D7 /* Pods-DMSGopenpgp_Tests.debug.xcconfig */,
+				6234242CEACA8ACD5EAD91E3D874C879 /* Pods-DMSGopenpgp_Tests.release.xcconfig */,
 			);
 			name = "Pods-DMSGopenpgp_Tests";
 			path = "Target Support Files/Pods-DMSGopenpgp_Tests";
+			sourceTree = "<group>";
+		};
+		BE282F63DD509062DB7D16EEF818A671 /* Pods-DMSGopenpgp_Example */ = {
+			isa = PBXGroup;
+			children = (
+				B4CF60C3BE18D060D1F2FB2EF835C6A3 /* Pods-DMSGopenpgp_Example.modulemap */,
+				9CAC914B83DDD12FD88BBEDB4FE474D5 /* Pods-DMSGopenpgp_Example-acknowledgements.markdown */,
+				4E970FAEB01A019FD5B99CC0B99C0629 /* Pods-DMSGopenpgp_Example-acknowledgements.plist */,
+				2E21B844F27270B892314F331E4BEB00 /* Pods-DMSGopenpgp_Example-dummy.m */,
+				3DB878DA475E8D87EF746AD51D27107C /* Pods-DMSGopenpgp_Example-Info.plist */,
+				F40EFA8717B939941E53309D68D3B430 /* Pods-DMSGopenpgp_Example-umbrella.h */,
+				6B90FC357146F92DB6E2AD3B3FF0AD83 /* Pods-DMSGopenpgp_Example.debug.xcconfig */,
+				54F0FDFBC05F52877EB86CCB303F756F /* Pods-DMSGopenpgp_Example.release.xcconfig */,
+			);
+			name = "Pods-DMSGopenpgp_Example";
+			path = "Target Support Files/Pods-DMSGopenpgp_Example";
 			sourceTree = "<group>";
 		};
 		C0834CEBB1379A84116EF29F93051C60 /* iOS */ = {
@@ -183,8 +181,8 @@
 				9D940727FF8FB9C785EB98E56350EF41 /* Podfile */,
 				35108B755D6D3ED442CEAAB2C8A942A1 /* Development Pods */,
 				D210D550F4EA176C3123ED886F8F87F5 /* Frameworks */,
-				82D628B3E14D186CAE660A00BD67A8C1 /* Products */,
-				6B802E3522829C0602B85D753CB37026 /* Targets Support Files */,
+				3F5FB01486EBFA45F76C5C49333570E7 /* Products */,
+				5BD4566320ACBAAF240C349739A1E464 /* Targets Support Files */,
 			);
 			sourceTree = "<group>";
 		};
@@ -196,42 +194,30 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		E142064113B5E88E565173718CFC10C5 /* DMSGopenpgp */ = {
+		E60763175F0814131E53C0DFE6E4237C /* Pod */ = {
 			isa = PBXGroup;
 			children = (
-				43489DA67BD5A8415078A8D7AC8B55A2 /* ReplaceMe.swift */,
-				1A1DAC8AC87CEC26499FFAEDEC110388 /* Pod */,
-				E6011CCF9C62A7D2D7A8D3466DDFE1C1 /* Support Files */,
+				FEF5BFD84151F41962102F48562F3761 /* DMSGopenpgp.podspec */,
+				684D890C7A8289DCEC47A06C512BD34E /* LICENSE */,
+				5C9C3CB2C05EBCAAC7392F64FEEC30B1 /* README 2.md */,
+			);
+			name = Pod;
+			sourceTree = "<group>";
+		};
+		FFF4CFD4D4DA4C0DA4116820EA3CF79B /* DMSGopenpgp */ = {
+			isa = PBXGroup;
+			children = (
+				2D1C4446CD445C674DF961C133DBC3AE /* Frameworks */,
+				E60763175F0814131E53C0DFE6E4237C /* Pod */,
+				2978E22EAEE4B5EC03492BDDDC6B94AC /* Support Files */,
 			);
 			name = DMSGopenpgp;
 			path = ../..;
 			sourceTree = "<group>";
 		};
-		E6011CCF9C62A7D2D7A8D3466DDFE1C1 /* Support Files */ = {
-			isa = PBXGroup;
-			children = (
-				EBA9B75D61D76F02180DD8FF79B08007 /* DMSGopenpgp.modulemap */,
-				23476615D08A9C283934224B90F36033 /* DMSGopenpgp.xcconfig */,
-				5B92D2F7906B59376EE78948193C0841 /* DMSGopenpgp-dummy.m */,
-				E6015A7FBFD6434C30C23B3083C9E492 /* DMSGopenpgp-Info.plist */,
-				C5A7354F8E7A618A9D173146DD4E005F /* DMSGopenpgp-prefix.pch */,
-				C4FEA9ED5A165032C52C8E36ECCB4066 /* DMSGopenpgp-umbrella.h */,
-			);
-			name = "Support Files";
-			path = "Example/Pods/Target Support Files/DMSGopenpgp";
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
-		70FD4FDA319023E9211243B57294B984 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				ACD939B28DF3659B803F5C1E2FA5C50F /* DMSGopenpgp-umbrella.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		DCC0588C3DA0694407DBB7A383092D43 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -270,24 +256,6 @@
 			productReference = 1D376C091CDD1DEA83CFD384B7BA77C2 /* Pods_DMSGopenpgp_Tests.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		AA0559C4331FFB0A136D1F8FFBF5D6F6 /* DMSGopenpgp */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = CE65E960B9A65FEBD3B0719C5E26711C /* Build configuration list for PBXNativeTarget "DMSGopenpgp" */;
-			buildPhases = (
-				70FD4FDA319023E9211243B57294B984 /* Headers */,
-				9FFFE03C8CB0078413DD696A43F1B33B /* Sources */,
-				4B37AD93A14A758FCCEC29B7C1F92C48 /* Frameworks */,
-				51B60512886C1B580BE58236FBED151A /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = DMSGopenpgp;
-			productName = DMSGopenpgp;
-			productReference = EF3267E1F7CC99122540C1AAA91BCE4B /* DMSGopenpgp.framework */;
-			productType = "com.apple.product-type.framework";
-		};
 		B04B0C413A971ED56851797AAEB5E864 /* Pods-DMSGopenpgp_Example */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = F44B39B079BAD7709DB281ED66EE2B58 /* Build configuration list for PBXNativeTarget "Pods-DMSGopenpgp_Example" */;
@@ -324,7 +292,7 @@
 				en,
 			);
 			mainGroup = CF1408CF629C7361332E53B88F7BD30C;
-			productRefGroup = 82D628B3E14D186CAE660A00BD67A8C1 /* Products */;
+			productRefGroup = 3F5FB01486EBFA45F76C5C49333570E7 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
@@ -336,13 +304,6 @@
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		51B60512886C1B580BE58236FBED151A /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		689D4AB660FB1CD696AF154BCDE847DC /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -365,15 +326,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				1532690C1DA2122800567CD954A3E497 /* Pods-DMSGopenpgp_Tests-dummy.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		9FFFE03C8CB0078413DD696A43F1B33B /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				4E37EA397160EDC087D9D425A46C9D85 /* DMSGopenpgp-dummy.m in Sources */,
-				B093723030ED54CA34147F9568F6D9F6 /* ReplaceMe.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -403,9 +355,36 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		1EF5A6E2E2604442D93BBA1894028DAD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = A972C38EAFA1575AD0DE405A04C3869C /* DMSGopenpgp.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		5ADFD66C6302AE8F9F2C2C2EEB10FEFC /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = A972C38EAFA1575AD0DE405A04C3869C /* DMSGopenpgp.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 		69AAA3EEDEC9B5593BE26F8B812ACE5F /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = D2D6F79F6BEFFA79FA9FDCC31C5DE487 /* Pods-DMSGopenpgp_Tests.release.xcconfig */;
+			baseConfigurationReference = 6234242CEACA8ACD5EAD91E3D874C879 /* Pods-DMSGopenpgp_Tests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CODE_SIGN_IDENTITY = "";
@@ -436,41 +415,10 @@
 				VERSION_INFO_PREFIX = "";
 			};
 			name = Release;
-		};
-		76DB0DFE26AF2F84AE70793E60E94D49 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 23476615D08A9C283934224B90F36033 /* DMSGopenpgp.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "Target Support Files/DMSGopenpgp/DMSGopenpgp-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/DMSGopenpgp/DMSGopenpgp-Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/DMSGopenpgp/DMSGopenpgp.modulemap";
-				PRODUCT_MODULE_NAME = DMSGopenpgp;
-				PRODUCT_NAME = DMSGopenpgp;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
 		};
 		95DD7BE55B2389C72C926C6C37163ADB /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 457E635CC6485EACCBD571371ADC16A2 /* Pods-DMSGopenpgp_Tests.debug.xcconfig */;
+			baseConfigurationReference = 8591FD380131859FD34C148470DC40D7 /* Pods-DMSGopenpgp_Tests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CODE_SIGN_IDENTITY = "";
@@ -500,38 +448,6 @@
 				VERSION_INFO_PREFIX = "";
 			};
 			name = Debug;
-		};
-		99E7BD33FF7AFAB4C51677D603FE05FD /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 23476615D08A9C283934224B90F36033 /* DMSGopenpgp.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "Target Support Files/DMSGopenpgp/DMSGopenpgp-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/DMSGopenpgp/DMSGopenpgp-Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/DMSGopenpgp/DMSGopenpgp.modulemap";
-				PRODUCT_MODULE_NAME = DMSGopenpgp;
-				PRODUCT_NAME = DMSGopenpgp;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
 		};
 		B0087CB4594321EF41619F3181FE120E /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -586,7 +502,8 @@
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRIP_INSTALLED_PRODUCT = NO;
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = 5.0;
 				SYMROOT = "${SRCROOT}/../build";
 			};
@@ -594,7 +511,7 @@
 		};
 		B637343BBD5518BCBE4FD0A80E14991C /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 21E624E2067AB012A2A2569B1E68C259 /* Pods-DMSGopenpgp_Example.release.xcconfig */;
+			baseConfigurationReference = 54F0FDFBC05F52877EB86CCB303F756F /* Pods-DMSGopenpgp_Example.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CODE_SIGN_IDENTITY = "";
@@ -692,7 +609,7 @@
 		};
 		D41646D82324E4918335088499986CAA /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F58FD346E8F10B4D08FD4F3A51612013 /* Pods-DMSGopenpgp_Example.debug.xcconfig */;
+			baseConfigurationReference = 6B90FC357146F92DB6E2AD3B3FF0AD83 /* Pods-DMSGopenpgp_Example.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = NO;
 				CODE_SIGN_IDENTITY = "";
@@ -744,11 +661,11 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		CE65E960B9A65FEBD3B0719C5E26711C /* Build configuration list for PBXNativeTarget "DMSGopenpgp" */ = {
+		69B3640A80DB4A0BEE88CCD0AE5AC087 /* Build configuration list for PBXAggregateTarget "DMSGopenpgp" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				76DB0DFE26AF2F84AE70793E60E94D49 /* Debug */,
-				99E7BD33FF7AFAB4C51677D603FE05FD /* Release */,
+				1EF5A6E2E2604442D93BBA1894028DAD /* Debug */,
+				5ADFD66C6302AE8F9F2C2C2EEB10FEFC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

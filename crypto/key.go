@@ -6,6 +6,7 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"io"
 	"math/big"
 	"strings"
 
@@ -194,4 +195,281 @@ func (pgp *GopenPGP) PrintFingerprints(pubKey string) (string, error) {
 		fmt.Println("PrimaryKey:" + hex.EncodeToString(e.PrimaryKey.Fingerprint[:]))
 	}
 	return "", nil
+}
+
+/* DMS customized KeyEntity and Key structs */
+const (
+	PubKeyAlgoRSA     int = 1
+	PubKeyAlgoElGamal int = 16
+	PubKeyAlgoDSA     int = 17
+	// RFC 6637, Section 5.
+	PubKeyAlgoECDH  int = 18
+	PubKeyAlgoECDSA int = 19
+	// https://www.ietf.org/archive/id/draft-koch-eddsa-for-openpgp-04.txt
+	PubKeyAlgoEdDSA int = 22
+
+	// Deprecated in RFC 4880, Section 13.5. Use key flags instead.
+	PubKeyAlgoRSAEncryptOnly int = 2
+	PubKeyAlgoRSASignOnly    int = 3
+)
+
+type PublicKey struct {
+	packet.PublicKey
+}
+
+func (p *PublicKey) GetCreationTimestamp() int {
+	return int(p.CreationTime.Unix())
+}
+
+func (p *PublicKey) GetAlgorithm() int {
+	return int(p.PubKeyAlgo)
+}
+
+func (p *PublicKey) GetFingerprint() string {
+	return hex.EncodeToString(p.Fingerprint[:])
+}
+
+func (p *PublicKey) GetKeyId() int {
+	return int(p.KeyId)
+}
+
+// KeyIdString returns the public key's fingerprint in capital hex
+// (e.g. "6C7EE1B8621CC013").
+func (p *PublicKey) KeyIdString() string {
+	return p.KeyIdString()
+}
+
+// KeyIdShortString returns the short form of public key's fingerprint
+// in capital hex, as shown by gpg --list-keys (e.g. "621CC013").
+func (p *PublicKey) KeyIdShortString() string {
+	return p.KeyIdShortString()
+}
+
+func (p *PublicKey) BitLength() (bitLength int, err error) {
+	rawBitLength, err := p.BitLength()
+	return int(rawBitLength), err
+}
+
+type PrivateKey struct {
+	PublicKey
+	packet.PrivateKey
+}
+
+func (privKey *PrivateKey) GetEncrypted() bool {
+	return privKey.Encrypted
+}
+
+type UserId struct {
+	packet.UserId
+}
+
+func (u *UserId) GetName() string {
+	return u.Name
+}
+
+func (u *UserId) GetId() string {
+	return u.Id
+}
+
+func (u *UserId) GetComment() string {
+	return u.Comment
+}
+
+func (u *UserId) GetEmail() string {
+	return u.Email
+}
+
+type Identity struct {
+	Name          string // by convention, has the form "Full Name (comment) <email@example.com>"
+	UserId        *UserId
+	SelfSignature *Signature
+	Signatures    []*Signature
+}
+
+func genIdentity(rawIdentity *openpgp.Identity) *Identity {
+	id := new(Identity)
+	id.Name = rawIdentity.Name
+	id.UserId = &UserId{*rawIdentity.UserId}
+	id.SelfSignature = &Signature{*rawIdentity.SelfSignature}
+	var sigs []*Signature
+	for _, s := range rawIdentity.Signatures {
+		sigs = append(sigs, &Signature{*s})
+	}
+	id.Signatures = sigs
+	return id
+}
+
+func genIdentityMap(rawIdentityMap map[string]*openpgp.Identity) map[string]*Identity {
+	newMap := make(map[string]*Identity)
+	for key, value := range rawIdentityMap {
+		newMap[key] = genIdentity(value)
+	}
+	return newMap
+}
+
+func getRawIdentity(identity *Identity) *openpgp.Identity {
+	rawId := new(openpgp.Identity)
+	rawId.Name = identity.Name
+	rawId.UserId = &identity.UserId.UserId
+	rawId.SelfSignature = &identity.SelfSignature.Signature
+	var sigs []*packet.Signature
+	for _, s := range identity.Signatures {
+		sigs = append(sigs, &s.Signature)
+	}
+	rawId.Signatures = sigs
+	return rawId
+}
+
+func genRawIdentityMap(identityMap map[string]*Identity) map[string]*openpgp.Identity {
+	newMap := make(map[string]*openpgp.Identity)
+	for key, value := range identityMap {
+		newMap[key] = getRawIdentity(value)
+	}
+	return newMap
+}
+
+type Subkey struct {
+	openpgp.Subkey
+}
+
+type KeyEntity struct {
+	PrimaryKey  *PublicKey
+	PrivateKey  *PrivateKey
+	Identities  map[string]*Identity // indexed by Identity.Name
+	Revocations []*Signature
+	Subkeys     []Subkey
+}
+
+func (k *KeyEntity) getRawEntity() *openpgp.Entity {
+	return &openpgp.Entity{
+		PrimaryKey:  &k.PrimaryKey.PublicKey,
+		PrivateKey:  &k.PrivateKey.PrivateKey,
+		Identities:  genRawIdentityMap(k.Identities),
+		Revocations: k.getRawRevocations(),
+		Subkeys:     k.getRawSubkeys(),
+	}
+}
+
+func (k *KeyEntity) getRawRevocations() []*packet.Signature {
+	var sigs []*packet.Signature
+	for _, s := range k.Revocations {
+		sigs = append(sigs, &s.Signature)
+	}
+	return sigs
+}
+
+func (k *KeyEntity) getRawSubkeys() []openpgp.Subkey {
+	var subkeys []openpgp.Subkey
+	for _, s := range k.Subkeys {
+		subkeys = append(subkeys, s.Subkey)
+	}
+	return subkeys
+}
+
+// Serialize writes the public part of the given Entity to w, including
+// signatures from other entities. No private key material will be output.
+func (k *KeyEntity) Serialize(w io.Writer) error {
+	err := k.PrimaryKey.Serialize(w)
+	if err != nil {
+		return err
+	}
+	for _, ident := range k.Identities {
+		err = ident.UserId.Serialize(w)
+		if err != nil {
+			return err
+		}
+		for _, sig := range ident.Signatures {
+			err = sig.Serialize(w)
+			if err != nil {
+				return err
+			}
+		}
+	}
+	for _, subkey := range k.Subkeys {
+		err = subkey.PublicKey.Serialize(w)
+		if err != nil {
+			return err
+		}
+		err = subkey.Sig.Serialize(w)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+type KeyEntityList []*KeyEntity
+
+// KeysById returns the set of keys that have the given key id.
+func (el KeyEntityList) KeysById(id uint64) (keys []openpgp.Key) {
+	for _, e := range el {
+		if e.PrimaryKey.KeyId == id {
+			var selfSig *packet.Signature
+			for _, ident := range e.Identities {
+				if selfSig == nil {
+					selfSig = &ident.SelfSignature.Signature
+				} else if ident.SelfSignature.IsPrimaryId != nil && *ident.SelfSignature.IsPrimaryId {
+					selfSig = &ident.SelfSignature.Signature
+					break
+				}
+			}
+			keys = append(keys, openpgp.Key{e.getRawEntity(), &e.PrimaryKey.PublicKey, &e.PrivateKey.PrivateKey, selfSig})
+		}
+
+		for _, subKey := range e.Subkeys {
+			if subKey.PublicKey.KeyId == id {
+				keys = append(keys, openpgp.Key{e.getRawEntity(), subKey.PublicKey, subKey.PrivateKey, subKey.Sig})
+			}
+		}
+	}
+	return
+}
+
+// KeysByIdAndUsage returns the set of keys with the given id that also meet
+// the key usage given by requiredUsage.  The requiredUsage is expressed as
+// the bitwise-OR of packet.KeyFlag* values.
+func (el KeyEntityList) KeysByIdUsage(id uint64, requiredUsage byte) (keys []openpgp.Key) {
+	for _, key := range el.KeysById(id) {
+		if len(key.Entity.Revocations) > 0 {
+			continue
+		}
+
+		if key.SelfSignature.RevocationReason != nil {
+			continue
+		}
+
+		if key.SelfSignature.FlagsValid && requiredUsage != 0 {
+			var usage byte
+			if key.SelfSignature.FlagCertify {
+				usage |= packet.KeyFlagCertify
+			}
+			if key.SelfSignature.FlagSign {
+				usage |= packet.KeyFlagSign
+			}
+			if key.SelfSignature.FlagEncryptCommunications {
+				usage |= packet.KeyFlagEncryptCommunications
+			}
+			if key.SelfSignature.FlagEncryptStorage {
+				usage |= packet.KeyFlagEncryptStorage
+			}
+			if usage&requiredUsage != requiredUsage {
+				continue
+			}
+		}
+
+		keys = append(keys, key)
+	}
+	return
+}
+
+// DecryptionKeys returns all private keys that are valid for decryption.
+func (el KeyEntityList) DecryptionKeys() (keys []openpgp.Key) {
+	for _, e := range el {
+		for _, subKey := range e.Subkeys {
+			if subKey.PrivateKey != nil && (!subKey.Sig.FlagsValid || subKey.Sig.FlagEncryptStorage || subKey.Sig.FlagEncryptCommunications) {
+				keys = append(keys, openpgp.Key{e.getRawEntity(), subKey.PublicKey, subKey.PrivateKey, subKey.Sig})
+			}
+		}
+	}
+	return
 }

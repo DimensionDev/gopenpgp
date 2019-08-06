@@ -17,24 +17,19 @@
 @class CryptoClearTextMessage;
 @class CryptoGopenPGP;
 @class CryptoIdentity;
+@class CryptoKeyEntity;
 @class CryptoKeyRing;
 @class CryptoPGPMessage;
 @class CryptoPGPSignature;
 @class CryptoPGPSplitMessage;
 @class CryptoPlainMessage;
-@class CryptoSignatureCollector;
+@class CryptoPrivateKey;
+@class CryptoPublicKey;
+@class CryptoSignature;
 @class CryptoSignatureVerificationError;
+@class CryptoSubkey;
 @class CryptoSymmetricKey;
-@protocol CryptoMIMECallbacks;
-@class CryptoMIMECallbacks;
-
-@protocol CryptoMIMECallbacks <NSObject>
-- (void)onAttachment:(NSString* _Nullable)headers data:(NSData* _Nullable)data;
-- (void)onBody:(NSString* _Nullable)body mimetype:(NSString* _Nullable)mimetype;
-- (void)onEncryptedHeaders:(NSString* _Nullable)headers;
-- (void)onError:(NSError* _Nullable)err;
-- (void)onVerified:(long)verified;
-@end
+@class CryptoUserId;
 
 /**
  * AttachmentProcessor keeps track of the progress of encrypting an attachment
@@ -146,14 +141,6 @@ If keyType is "x25519" bits is unused.
  */
 - (NSString* _Nonnull)printFingerprints:(NSString* _Nullable)pubKey error:(NSError* _Nullable* _Nullable)error;
 /**
- * RandomToken generated a random token of the same size of the keysize of the default cipher.
- */
-- (NSData* _Nullable)randomToken:(NSError* _Nullable* _Nullable)error;
-/**
- * RandomTokenSize generates a random token with the specified key size
- */
-- (NSData* _Nullable)randomTokenSize:(long)size error:(NSError* _Nullable* _Nullable)error;
-/**
  * UpdatePrivateKeyPassphrase decrypts the given armored privateKey with oldPassphrase,
 re-encrypts it with newPassphrase, and returns the new armored key.
  */
@@ -164,9 +151,6 @@ re-encrypts it with newPassphrase, and returns the new armored key.
 - (void)updateTime:(int64_t)newTime;
 @end
 
-/**
- * Identity contains the name and the email of a key holder.
- */
 @interface CryptoIdentity : NSObject <goSeqRefInterface> {
 }
 @property(strong, readonly) _Nonnull id _ref;
@@ -174,21 +158,38 @@ re-encrypts it with newPassphrase, and returns the new armored key.
 - (nonnull instancetype)initWithRef:(_Nonnull id)ref;
 - (nonnull instancetype)init;
 @property (nonatomic) NSString* _Nonnull name;
-@property (nonatomic) NSString* _Nonnull email;
+@property (nonatomic) CryptoUserId* _Nullable userId;
+@property (nonatomic) CryptoSignature* _Nullable selfSignature;
+// skipped field Identity.Signatures with unsupported type: []*github.com/DimensionDev/gopenpgp/crypto.Signature
+
 @end
 
-/**
- * KeyRing contains multiple private and public keys.
- */
+@interface CryptoKeyEntity : NSObject <goSeqRefInterface> {
+}
+@property(strong, readonly) _Nonnull id _ref;
+
+- (nonnull instancetype)initWithRef:(_Nonnull id)ref;
+- (nonnull instancetype)init;
+@property (nonatomic) CryptoPublicKey* _Nullable primaryKey;
+@property (nonatomic) CryptoPrivateKey* _Nullable privateKey;
+// skipped field KeyEntity.Identities with unsupported type: map[string]*github.com/DimensionDev/gopenpgp/crypto.Identity
+
+// skipped field KeyEntity.Revocations with unsupported type: []*github.com/DimensionDev/gopenpgp/crypto.Signature
+
+// skipped field KeyEntity.Subkeys with unsupported type: []github.com/DimensionDev/gopenpgp/crypto.Subkey
+
+// skipped method KeyEntity.Serialize with unsupported parameter or return types
+
+@end
+
 @interface CryptoKeyRing : NSObject <goSeqRefInterface> {
 }
 @property(strong, readonly) _Nonnull id _ref;
 
 - (nonnull instancetype)initWithRef:(_Nonnull id)ref;
 - (nonnull instancetype)init;
-/**
- * FirstKeyID as obtained from API to match salt
- */
+// skipped field KeyRing.Entities with unsupported type: []*github.com/DimensionDev/gopenpgp/crypto.KeyEntity
+
 @property (nonatomic) NSString* _Nonnull firstKeyID;
 /**
  * CheckPassphrase checks if private key passphrase is correct for every sub key.
@@ -203,14 +204,6 @@ verifyTime : Time at verification (necessary only if verifyKey is not nil)
 - (CryptoPlainMessage* _Nullable)decrypt:(CryptoPGPMessage* _Nullable)message verifyKey:(CryptoKeyRing* _Nullable)verifyKey verifyTime:(int64_t)verifyTime error:(NSError* _Nullable* _Nullable)error;
 - (CryptoPlainMessage* _Nullable)decryptAttachment:(CryptoPGPSplitMessage* _Nullable)message error:(NSError* _Nullable* _Nullable)error;
 /**
- * DecryptMIMEMessage decrypts a MIME message.
- */
-- (void)decryptMIMEMessage:(CryptoPGPMessage* _Nullable)message verifyKey:(CryptoKeyRing* _Nullable)verifyKey callbacks:(id<CryptoMIMECallbacks> _Nullable)callbacks verifyTime:(int64_t)verifyTime;
-/**
- * DecryptSessionKey returns the decrypted session key from a binary encrypted session key packet.
- */
-- (CryptoSymmetricKey* _Nullable)decryptSessionKey:(NSData* _Nullable)keyPacket error:(NSError* _Nullable* _Nullable)error;
-/**
  * Encrypt encrypts a PlainMessage, outputs a PGPMessage.
 If an unlocked private key is also provided it will also sign the message.
 message    : The plaintext input as a PlainMessage
@@ -218,11 +211,6 @@ privateKey : (optional) an unlocked private keyring to include signature in the 
  */
 - (CryptoPGPMessage* _Nullable)encrypt:(CryptoPlainMessage* _Nullable)message privateKey:(CryptoKeyRing* _Nullable)privateKey error:(NSError* _Nullable* _Nullable)error;
 - (CryptoPGPSplitMessage* _Nullable)encryptAttachment:(CryptoPlainMessage* _Nullable)message fileName:(NSString* _Nullable)fileName error:(NSError* _Nullable* _Nullable)error;
-/**
- * EncryptSessionKey encrypts the session key with the unarmored
-publicKey and returns a binary public-key encrypted session key packet.
- */
-- (NSData* _Nullable)encryptSessionKey:(CryptoSymmetricKey* _Nullable)sessionSplit error:(NSError* _Nullable* _Nullable)error;
 /**
  * GetArmoredPublicKey returns the armored public keys from this keyring.
  */
@@ -237,8 +225,10 @@ publicKey and returns a binary public-key encrypted session key packet.
  * GetPublicKey returns the unarmored public keys from this keyring.
  */
 - (NSData* _Nullable)getPublicKey:(NSError* _Nullable* _Nullable)error;
-// skipped method KeyRing.GetSigningEntity with unsupported parameter or return types
-
+/**
+ * GetSigningEntity returns first private unlocked signing entity from keyring.
+ */
+- (CryptoKeyEntity* _Nullable)getSigningEntity:(NSError* _Nullable* _Nullable)error;
 // skipped method KeyRing.Identities with unsupported parameter or return types
 
 // skipped method KeyRing.KeyIds with unsupported parameter or return types
@@ -426,21 +416,96 @@ ready for encryption, signature, or verification from an unencrypted string.
 
 @end
 
-/**
- * SignatureCollector structure
- */
-@interface CryptoSignatureCollector : NSObject <goSeqRefInterface> {
+@interface CryptoPrivateKey : NSObject <goSeqRefInterface> {
 }
 @property(strong, readonly) _Nonnull id _ref;
 
 - (nonnull instancetype)initWithRef:(_Nonnull id)ref;
 - (nonnull instancetype)init;
-// skipped method SignatureCollector.Accept with unsupported parameter or return types
+// skipped field PrivateKey.PublicKey with unsupported type: github.com/DimensionDev/gopenpgp/crypto.PublicKey
+
+// skipped field PrivateKey.PrivateKey with unsupported type: golang.org/x/crypto/openpgp/packet.PrivateKey
+
+- (BOOL)bitLength:(long* _Nullable)bitLength error:(NSError* _Nullable* _Nullable)error;
+- (BOOL)decrypt:(NSData* _Nullable)passphrase error:(NSError* _Nullable* _Nullable)error;
+- (BOOL)encrypt:(NSData* _Nullable)passphrase error:(NSError* _Nullable* _Nullable)error;
+- (long)getAlgorithm;
+- (long)getCreationTimestamp;
+- (BOOL)getEncrypted;
+- (NSString* _Nonnull)getFingerprint;
+- (long)getKeyId;
+- (NSString* _Nonnull)keyIdShortString;
+- (NSString* _Nonnull)keyIdString;
+// skipped method PrivateKey.Serialize with unsupported parameter or return types
+
+// skipped method PrivateKey.SerializeEncrypted with unsupported parameter or return types
+
+// skipped method PrivateKey.SerializeUnEncrypted with unsupported parameter or return types
+
+@end
+
+@interface CryptoPublicKey : NSObject <goSeqRefInterface> {
+}
+@property(strong, readonly) _Nonnull id _ref;
+
+- (nonnull instancetype)initWithRef:(_Nonnull id)ref;
+- (nonnull instancetype)init;
+// skipped field PublicKey.PublicKey with unsupported type: golang.org/x/crypto/openpgp/packet.PublicKey
+
+- (BOOL)bitLength:(long* _Nullable)bitLength error:(NSError* _Nullable* _Nullable)error;
+- (BOOL)canSign;
+- (long)getAlgorithm;
+- (long)getCreationTimestamp;
+- (NSString* _Nonnull)getFingerprint;
+- (long)getKeyId;
+// skipped method PublicKey.KeyExpired with unsupported parameter or return types
 
 /**
- * GetSignature collected by Accept
+ * KeyIdShortString returns the short form of public key's fingerprint
+in capital hex, as shown by gpg --list-keys (e.g. "621CC013").
  */
-- (NSString* _Nonnull)getSignature;
+- (NSString* _Nonnull)keyIdShortString;
+/**
+ * KeyIdString returns the public key's fingerprint in capital hex
+(e.g. "6C7EE1B8621CC013").
+ */
+- (NSString* _Nonnull)keyIdString;
+// skipped method PublicKey.Serialize with unsupported parameter or return types
+
+// skipped method PublicKey.SerializeSignaturePrefix with unsupported parameter or return types
+
+// skipped method PublicKey.VerifyKeySignature with unsupported parameter or return types
+
+// skipped method PublicKey.VerifyRevocationSignature with unsupported parameter or return types
+
+// skipped method PublicKey.VerifySignature with unsupported parameter or return types
+
+// skipped method PublicKey.VerifySignatureV3 with unsupported parameter or return types
+
+// skipped method PublicKey.VerifyUserIdSignature with unsupported parameter or return types
+
+// skipped method PublicKey.VerifyUserIdSignatureV3 with unsupported parameter or return types
+
+@end
+
+@interface CryptoSignature : NSObject <goSeqRefInterface> {
+}
+@property(strong, readonly) _Nonnull id _ref;
+
+- (nonnull instancetype)initWithRef:(_Nonnull id)ref;
+- (nonnull instancetype)init;
+// skipped field Signature.Signature with unsupported type: golang.org/x/crypto/openpgp/packet.Signature
+
+// skipped method Signature.Serialize with unsupported parameter or return types
+
+// skipped method Signature.SigExpired with unsupported parameter or return types
+
+// skipped method Signature.Sign with unsupported parameter or return types
+
+// skipped method Signature.SignKey with unsupported parameter or return types
+
+// skipped method Signature.SignUserId with unsupported parameter or return types
+
 @end
 
 /**
@@ -458,6 +523,16 @@ ready for encryption, signature, or verification from an unencrypted string.
  * Error is the base method for all errors
  */
 - (NSString* _Nonnull)error;
+@end
+
+@interface CryptoSubkey : NSObject <goSeqRefInterface> {
+}
+@property(strong, readonly) _Nonnull id _ref;
+
+- (nonnull instancetype)initWithRef:(_Nonnull id)ref;
+- (nonnull instancetype)init;
+// skipped field Subkey.Subkey with unsupported type: golang.org/x/crypto/openpgp.Subkey
+
 @end
 
 /**
@@ -506,6 +581,55 @@ returns a binary symmetrically encrypted session key packet.
 // skipped method SymmetricKey.GetCipherFunc with unsupported parameter or return types
 
 @end
+
+@interface CryptoUserId : NSObject <goSeqRefInterface> {
+}
+@property(strong, readonly) _Nonnull id _ref;
+
+- (nonnull instancetype)initWithRef:(_Nonnull id)ref;
+- (nonnull instancetype)init;
+// skipped field UserId.UserId with unsupported type: golang.org/x/crypto/openpgp/packet.UserId
+
+- (NSString* _Nonnull)getComment;
+- (NSString* _Nonnull)getEmail;
+- (NSString* _Nonnull)getId;
+- (NSString* _Nonnull)getName;
+// skipped method UserId.Serialize with unsupported parameter or return types
+
+@end
+
+/**
+ *  DMS customized KeyEntity and Key structs
+ */
+FOUNDATION_EXPORT const long CryptoPubKeyAlgoDSA;
+/**
+ * RFC 6637, Section 5.
+ */
+FOUNDATION_EXPORT const long CryptoPubKeyAlgoECDH;
+/**
+ *  DMS customized KeyEntity and Key structs
+ */
+FOUNDATION_EXPORT const long CryptoPubKeyAlgoECDSA;
+/**
+ * https://www.ietf.org/archive/id/draft-koch-eddsa-for-openpgp-04.txt
+ */
+FOUNDATION_EXPORT const long CryptoPubKeyAlgoEdDSA;
+/**
+ *  DMS customized KeyEntity and Key structs
+ */
+FOUNDATION_EXPORT const long CryptoPubKeyAlgoElGamal;
+/**
+ *  DMS customized KeyEntity and Key structs
+ */
+FOUNDATION_EXPORT const long CryptoPubKeyAlgoRSA;
+/**
+ * Deprecated in RFC 4880, Section 13.5. Use key flags instead.
+ */
+FOUNDATION_EXPORT const long CryptoPubKeyAlgoRSAEncryptOnly;
+/**
+ *  DMS customized KeyEntity and Key structs
+ */
+FOUNDATION_EXPORT const long CryptoPubKeyAlgoRSASignOnly;
 
 // skipped function FilterExpiredKeys with unsupported parameter or return types
 
@@ -582,25 +706,5 @@ FOUNDATION_EXPORT CryptoSymmetricKey* _Nullable CryptoNewSymmetricKeyFromToken(N
 
 // skipped function ReadKeyRing with unsupported parameter or return types
 
-
-@class CryptoMIMECallbacks;
-
-/**
- * MIMECallbacks defines callback methods to process a MIME message.
- */
-@interface CryptoMIMECallbacks : NSObject <goSeqRefInterface, CryptoMIMECallbacks> {
-}
-@property(strong, readonly) _Nonnull id _ref;
-
-- (nonnull instancetype)initWithRef:(_Nonnull id)ref;
-- (void)onAttachment:(NSString* _Nullable)headers data:(NSData* _Nullable)data;
-- (void)onBody:(NSString* _Nullable)body mimetype:(NSString* _Nullable)mimetype;
-/**
- * Encrypted headers can be in an attachment and thus be placed at the end of the mime structure.
- */
-- (void)onEncryptedHeaders:(NSString* _Nullable)headers;
-- (void)onError:(NSError* _Nullable)err;
-- (void)onVerified:(long)verified;
-@end
 
 #endif

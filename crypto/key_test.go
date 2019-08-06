@@ -156,7 +156,7 @@ func TestGenerateKeyWithPrimes(t *testing.T) {
 		t.Fatal("Cannot decrypt RSA key:", err)
 	}
 
-	pk := staticRsaKeyRing.GetEntities()[0].PrivateKey.PrivateKey.(*rsa.PrivateKey)
+	pk := staticRsaKeyRing.GetEntities()[0].PrivateKey.PrivateKey.PrivateKey.(*rsa.PrivateKey)
 	assert.Exactly(t, prime1, pk.Primes[1].Bytes())
 	assert.Exactly(t, prime2, pk.Primes[0].Bytes())
 }

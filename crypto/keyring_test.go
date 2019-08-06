@@ -35,10 +35,10 @@ var (
 	testPublicKeyRing  *KeyRing
 )
 
-var testIdentity = &Identity{
-	Name:  "UserID",
-	Email: "",
-}
+// var testIdentity = &Identity{
+// 	Name:  "UserID",
+// 	Email: "",
+// }
 
 func init() {
 	var err error
@@ -60,6 +60,23 @@ func init() {
 }
 
 func TestKeyRing_ArmoredPublicKeyString(t *testing.T) {
+
+	dmsPrivKeyRing, err := ReadArmoredKeyRing(strings.NewReader(readTestFile("dms_privKey", false)))
+	privPubkey, err := dmsPrivKeyRing.GetArmoredPublicKey()
+	dmsPrivKeyRing.UnlockWithPassphrase("RSA")
+	print(privPubkey)
+
+	dmsKeyPairRing, err := ReadArmoredKeyRing(strings.NewReader(readTestFile("dms_keyPair", false)))
+	keypairPubkey, err := dmsKeyPairRing.GetArmoredPublicKey()
+	print(keypairPubkey)
+
+	dmsPubKeyRing, err := ReadArmoredKeyRing(strings.NewReader(readTestFile("dms_pubkey", false)))
+	pppkey, err := dmsPubKeyRing.GetArmoredPublicKey()
+	print(pppkey)
+	if err != nil {
+		panic(err)
+	}
+
 	s, err := testPrivateKeyRing.GetArmoredPublicKey()
 	if err != nil {
 		t.Fatal("Expected no error while getting armored public key, got:", err)
@@ -103,7 +120,8 @@ func TestCheckPassphrase(t *testing.T) {
 func TestIdentities(t *testing.T) {
 	identities := testPrivateKeyRing.Identities()
 	assert.Len(t, identities, 1)
-	assert.Exactly(t, identities[0], testIdentity)
+	assert.Exactly(t, identities[0].Name, "UserID")
+	assert.Exactly(t, identities[0].UserId.Email, "")
 }
 
 func TestFilterExpiredKeys(t *testing.T) {
@@ -145,7 +163,7 @@ func TestGetPublicKey(t *testing.T) {
 
 func TestKeyIds(t *testing.T) {
 	keyIDs := testPrivateKeyRing.KeyIds()
-	var assertKeyIDs = []uint64{4518840640391470884}
+	var assertKeyIDs = []int{4518840640391470884}
 	assert.Exactly(t, assertKeyIDs, keyIDs)
 }
 
@@ -180,7 +198,7 @@ func TestUnlockJson(t *testing.T) {
 		t.Fatal("Expected no error while reading and decrypting JSON, got:", err)
 	}
 
-	for _, e := range addressKeyRing.entities {
-		assert.Exactly(t, false, e.PrivateKey.Encrypted)
+	for _, e := range addressKeyRing.Entities {
+		assert.Exactly(t, false, e.PrivateKey.PrivateKey.Encrypted)
 	}
 }
