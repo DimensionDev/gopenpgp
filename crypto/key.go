@@ -354,9 +354,13 @@ func (k *KeyEntity) GetIdentity(index int) (*Identity, error) {
 }
 
 func (k *KeyEntity) getRawEntity() *openpgp.Entity {
+	var rawPrivKey *packet.PrivateKey
+	if k.PrivateKey != nil {
+		rawPrivKey = &k.PrivateKey.PrivateKey
+	}
 	return &openpgp.Entity{
 		PrimaryKey:  &k.PrimaryKey.PublicKey,
-		PrivateKey:  &k.PrivateKey.PrivateKey,
+		PrivateKey:  rawPrivKey,
 		Identities:  genRawIdentityMap(k.Identities),
 		Revocations: k.getRawRevocations(),
 		Subkeys:     k.getRawSubkeys(),
@@ -426,7 +430,11 @@ func (el KeyEntityList) KeysById(id uint64) (keys []openpgp.Key) {
 					break
 				}
 			}
-			keys = append(keys, openpgp.Key{e.getRawEntity(), &e.PrimaryKey.PublicKey, &e.PrivateKey.PrivateKey, selfSig})
+			var rawPrivKey *packet.PrivateKey
+			if e.PrivateKey != nil {
+				rawPrivKey = &e.PrivateKey.PrivateKey
+			}
+			keys = append(keys, openpgp.Key{e.getRawEntity(), &e.PrimaryKey.PublicKey, rawPrivKey, selfSig})
 		}
 
 		for _, subKey := range e.Subkeys {

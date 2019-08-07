@@ -78,9 +78,13 @@ func (keyRing *KeyRing) GetEntities() []*KeyEntity {
 func (keyRing *KeyRing) getRawEntities() openpgp.EntityList {
 	var rawEntities openpgp.EntityList
 	for _, de := range keyRing.Entities {
+		var rawPrivKey *packet.PrivateKey
+		if de.PrivateKey != nil {
+			rawPrivKey = &de.PrivateKey.PrivateKey
+		}
 		re := &openpgp.Entity{
 			PrimaryKey:  &de.PrimaryKey.PublicKey,
-			PrivateKey:  &de.PrivateKey.PrivateKey,
+			PrivateKey:  rawPrivKey,
 			Identities:  genRawIdentityMap(de.Identities),
 			Revocations: de.getRawRevocations(),
 			Subkeys:     de.getRawSubkeys(),
@@ -248,7 +252,9 @@ func (keyRing *KeyRing) CheckPassphrase(passphrase string) bool {
 	var keys []*packet.PrivateKey
 
 	for _, entity := range keyRing.Entities {
-		keys = append(keys, &entity.PrivateKey.PrivateKey)
+		if entity.PrivateKey != nil {
+			keys = append(keys, &entity.PrivateKey.PrivateKey)
+		}
 	}
 	var decryptError error
 	var n int
