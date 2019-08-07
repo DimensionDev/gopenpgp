@@ -88,11 +88,14 @@ func asymmetricEncrypt(data []byte, publicKey *KeyRing, privateKey *KeyRing, isB
 		IsBinary: isBinary,
 		FileName: "",
 	}
-
+	var rawSignEntity *openpgp.Entity
+	if signEntity != nil {
+		rawSignEntity = signEntity.getRawEntity()
+	}
 	if isBinary {
-		encryptWriter, err = openpgp.Encrypt(&outBuf, publicKey.getRawEntities(), signEntity.getRawEntity(), hints, config)
+		encryptWriter, err = openpgp.Encrypt(&outBuf, publicKey.getRawEntities(), rawSignEntity, hints, config)
 	} else {
-		encryptWriter, err = openpgp.EncryptText(&outBuf, publicKey.getRawEntities(), signEntity.getRawEntity(), hints, config)
+		encryptWriter, err = openpgp.EncryptText(&outBuf, publicKey.getRawEntities(), rawSignEntity, hints, config)
 	}
 	if err != nil {
 		return nil, err
