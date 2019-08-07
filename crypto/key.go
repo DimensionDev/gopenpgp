@@ -300,12 +300,12 @@ func genIdentity(rawIdentity *openpgp.Identity) *Identity {
 	return id
 }
 
-func genIdentityMap(rawIdentityMap map[string]*openpgp.Identity) map[string]*Identity {
-	newMap := make(map[string]*Identity)
-	for key, value := range rawIdentityMap {
-		newMap[key] = genIdentity(value)
+func genIdentityList(rawIdentityMap map[string]*openpgp.Identity) []*Identity {
+	var idList []*Identity
+	for _, value := range rawIdentityMap {
+		idList = append(idList, genIdentity(value))
 	}
-	return newMap
+	return idList
 }
 
 func getRawIdentity(identity *Identity) *openpgp.Identity {
@@ -321,10 +321,10 @@ func getRawIdentity(identity *Identity) *openpgp.Identity {
 	return rawId
 }
 
-func genRawIdentityMap(identityMap map[string]*Identity) map[string]*openpgp.Identity {
+func genRawIdentityMap(identityMap []*Identity) map[string]*openpgp.Identity {
 	newMap := make(map[string]*openpgp.Identity)
-	for key, value := range identityMap {
-		newMap[key] = getRawIdentity(value)
+	for _, value := range identityMap {
+		newMap[value.Name] = getRawIdentity(value)
 	}
 	return newMap
 }
@@ -334,11 +334,23 @@ type Subkey struct {
 }
 
 type KeyEntity struct {
-	PrimaryKey  *PublicKey
-	PrivateKey  *PrivateKey
-	Identities  map[string]*Identity // indexed by Identity.Name
+	PrimaryKey *PublicKey
+	PrivateKey *PrivateKey
+	// Identities  map[string]*Identity // indexed by Identity.Name
+	Identities  []*Identity // indexed by Identity.Name
 	Revocations []*Signature
 	Subkeys     []Subkey
+}
+
+func (k *KeyEntity) GetIdentityCount() int {
+	return len(k.Identities)
+}
+
+func (k *KeyEntity) GetIdentity(index int) (*Identity, error) {
+	if index >= len(k.Identities) {
+		return nil, errors.New("openpgp: index out of bounds, there are only " + string(len(k.Identities)) + "identities")
+	}
+	return k.Identities[index], nil
 }
 
 func (k *KeyEntity) getRawEntity() *openpgp.Entity {

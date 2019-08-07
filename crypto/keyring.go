@@ -60,6 +60,17 @@ func (ko *pgpKeyObject) PrivateKeyReader() io.Reader {
 // 	return keyRing.entities
 // }
 
+func (keyRing *KeyRing) GetEntitiesCount() int {
+	return len(keyRing.Entities)
+}
+
+func (keyRing *KeyRing) GetEntity(index int) (*KeyEntity, error) {
+	if index >= len(keyRing.Entities) {
+		return nil, errors.New("openpgp: index out of bounds, there are only " + string(len(keyRing.Entities)) + "entities")
+	}
+	return keyRing.Entities[index], nil
+}
+
 func (keyRing *KeyRing) GetEntities() []*KeyEntity {
 	return keyRing.Entities
 }
@@ -417,15 +428,15 @@ func unmarshalJSON(jsonData []byte) ([]pgpKeyObject, error) {
 }
 
 // Identities returns the list of identities associated with this key ring.
-func (keyRing *KeyRing) Identities() []*Identity {
-	var identities []*Identity
-	for _, e := range keyRing.Entities {
-		for _, id := range e.Identities {
-			identities = append(identities, e.Identities[id.Name])
-		}
-	}
-	return identities
-}
+// func (keyRing *KeyRing) Identities() []*Identity {
+// 	var identities []*Identity
+// 	for _, e := range keyRing.Entities {
+// 		for _, id := range e.Identities {
+// 			identities = append(identities, e.Identities[id.Name])
+// 		}
+// 	}
+// 	return identities
+// }
 
 // func (keyRing *KeyRing) Identities() []*Identity {
 // 	var identities []*Identity
@@ -518,7 +529,7 @@ func genDMSEntities(rawEntities openpgp.EntityList) []*KeyEntity {
 			de.PrivateKey = newPrivKey
 		}
 
-		de.Identities = genIdentityMap(e.Identities)
+		de.Identities = genIdentityList(e.Identities)
 
 		var revocations []*Signature
 		for _, re := range e.Revocations {

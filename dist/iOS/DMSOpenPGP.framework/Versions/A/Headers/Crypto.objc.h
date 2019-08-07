@@ -172,12 +172,14 @@ re-encrypts it with newPassphrase, and returns the new armored key.
 - (nonnull instancetype)init;
 @property (nonatomic) CryptoPublicKey* _Nullable primaryKey;
 @property (nonatomic) CryptoPrivateKey* _Nullable privateKey;
-// skipped field KeyEntity.Identities with unsupported type: map[string]*github.com/DimensionDev/gopenpgp/crypto.Identity
+// skipped field KeyEntity.Identities with unsupported type: []*github.com/DimensionDev/gopenpgp/crypto.Identity
 
 // skipped field KeyEntity.Revocations with unsupported type: []*github.com/DimensionDev/gopenpgp/crypto.Signature
 
 // skipped field KeyEntity.Subkeys with unsupported type: []github.com/DimensionDev/gopenpgp/crypto.Subkey
 
+- (CryptoIdentity* _Nullable)getIdentity:(long)index error:(NSError* _Nullable* _Nullable)error;
+- (long)getIdentityCount;
 // skipped method KeyEntity.Serialize with unsupported parameter or return types
 
 @end
@@ -217,6 +219,8 @@ privateKey : (optional) an unlocked private keyring to include signature in the 
 - (NSString* _Nonnull)getArmoredPublicKey:(NSError* _Nullable* _Nullable)error;
 // skipped method KeyRing.GetEntities with unsupported parameter or return types
 
+- (long)getEntitiesCount;
+- (CryptoKeyEntity* _Nullable)getEntity:(long)index error:(NSError* _Nullable* _Nullable)error;
 /**
  * GetFingerprint gets the fingerprint from the keyring.
  */
@@ -229,8 +233,6 @@ privateKey : (optional) an unlocked private keyring to include signature in the 
  * GetSigningEntity returns first private unlocked signing entity from keyring.
  */
 - (CryptoKeyEntity* _Nullable)getSigningEntity:(NSError* _Nullable* _Nullable)error;
-// skipped method KeyRing.Identities with unsupported parameter or return types
-
 // skipped method KeyRing.KeyIds with unsupported parameter or return types
 
 - (CryptoAttachmentProcessor* _Nullable)newLowMemoryAttachmentProcessor:(long)estimatedSize fileName:(NSString* _Nullable)fileName error:(NSError* _Nullable* _Nullable)error;
