@@ -118,7 +118,7 @@ func TestCheckPassphrase(t *testing.T) {
 }
 
 func TestIdentities(t *testing.T) {
-	identities := testPrivateKeyRing.Identities()
+	identities := testPrivateKeyRing.Entities[0].Identities
 	assert.Len(t, identities, 1)
 	assert.Exactly(t, identities[0].Name, "UserID")
 	assert.Exactly(t, identities[0].UserId.Email, "")
