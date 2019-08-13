@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/DimensionDev/gopenpgp/constants"
+	"github.com/ProtonMail/gopenpgp/constants"
 
 	"golang.org/x/crypto/openpgp"
 	"golang.org/x/crypto/openpgp/packet"
@@ -48,8 +48,8 @@ func (symmetricKey *SymmetricKey) GetBase64Key() string {
 
 func NewSymmetricKeyFromToken(passphrase, algo string) *SymmetricKey {
 	return &SymmetricKey{
-		[]byte(passphrase),
-		algo,
+		Key:  []byte(passphrase),
+		Algo: algo,
 	}
 	// return NewSymmetricKey([]byte(passphrase), algo)
 }
@@ -74,9 +74,10 @@ func newSymmetricKeyFromEncrypted(ek *packet.EncryptedKey) (*SymmetricKey, error
 	}
 
 	return &SymmetricKey{
-		ek.Key,
-		algo,
+		Key:  ek.Key,
+		Algo: algo,
 	}, nil
+
 	// return NewSymmetricKey(ek.Key, algo), nil
 }
 

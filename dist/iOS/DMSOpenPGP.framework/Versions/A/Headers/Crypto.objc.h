@@ -26,10 +26,21 @@
 @class CryptoPrivateKey;
 @class CryptoPublicKey;
 @class CryptoSignature;
+@class CryptoSignatureCollector;
 @class CryptoSignatureVerificationError;
 @class CryptoSubkey;
 @class CryptoSymmetricKey;
 @class CryptoUserId;
+@protocol CryptoMIMECallbacks;
+@class CryptoMIMECallbacks;
+
+@protocol CryptoMIMECallbacks <NSObject>
+- (void)onAttachment:(NSString* _Nullable)headers data:(NSData* _Nullable)data;
+- (void)onBody:(NSString* _Nullable)body mimetype:(NSString* _Nullable)mimetype;
+- (void)onEncryptedHeaders:(NSString* _Nullable)headers;
+- (void)onError:(NSError* _Nullable)err;
+- (void)onVerified:(long)verified;
+@end
 
 /**
  * AttachmentProcessor keeps track of the progress of encrypting an attachment
@@ -141,6 +152,14 @@ If keyType is "x25519" bits is unused.
  */
 - (NSString* _Nonnull)printFingerprints:(NSString* _Nullable)pubKey error:(NSError* _Nullable* _Nullable)error;
 /**
+ * RandomToken generated a random token of the same size of the keysize of the default cipher.
+ */
+- (NSData* _Nullable)randomToken:(NSError* _Nullable* _Nullable)error;
+/**
+ * RandomTokenSize generates a random token with the specified key size
+ */
+- (NSData* _Nullable)randomTokenSize:(long)size error:(NSError* _Nullable* _Nullable)error;
+/**
  * UpdatePrivateKeyPassphrase decrypts the given armored privateKey with oldPassphrase,
 re-encrypts it with newPassphrase, and returns the new armored key.
  */
@@ -206,6 +225,14 @@ verifyTime : Time at verification (necessary only if verifyKey is not nil)
 - (CryptoPlainMessage* _Nullable)decrypt:(CryptoPGPMessage* _Nullable)message verifyKey:(CryptoKeyRing* _Nullable)verifyKey verifyTime:(int64_t)verifyTime error:(NSError* _Nullable* _Nullable)error;
 - (CryptoPlainMessage* _Nullable)decryptAttachment:(CryptoPGPSplitMessage* _Nullable)message error:(NSError* _Nullable* _Nullable)error;
 /**
+ * DecryptMIMEMessage decrypts a MIME message.
+ */
+- (void)decryptMIMEMessage:(CryptoPGPMessage* _Nullable)message verifyKey:(CryptoKeyRing* _Nullable)verifyKey callbacks:(id<CryptoMIMECallbacks> _Nullable)callbacks verifyTime:(int64_t)verifyTime;
+/**
+ * DecryptSessionKey returns the decrypted session key from a binary encrypted session key packet.
+ */
+- (CryptoSymmetricKey* _Nullable)decryptSessionKey:(NSData* _Nullable)keyPacket error:(NSError* _Nullable* _Nullable)error;
+/**
  * Encrypt encrypts a PlainMessage, outputs a PGPMessage.
 If an unlocked private key is also provided it will also sign the message.
 message    : The plaintext input as a PlainMessage
@@ -213,6 +240,11 @@ privateKey : (optional) an unlocked private keyring to include signature in the 
  */
 - (CryptoPGPMessage* _Nullable)encrypt:(CryptoPlainMessage* _Nullable)message privateKey:(CryptoKeyRing* _Nullable)privateKey error:(NSError* _Nullable* _Nullable)error;
 - (CryptoPGPSplitMessage* _Nullable)encryptAttachment:(CryptoPlainMessage* _Nullable)message fileName:(NSString* _Nullable)fileName error:(NSError* _Nullable* _Nullable)error;
+/**
+ * EncryptSessionKey encrypts the session key with the unarmored
+publicKey and returns a binary public-key encrypted session key packet.
+ */
+- (NSData* _Nullable)encryptSessionKey:(CryptoSymmetricKey* _Nullable)sessionSplit error:(NSError* _Nullable* _Nullable)error;
 /**
  * GetArmoredPublicKey returns the armored public keys from this keyring.
  */
@@ -513,6 +545,23 @@ in capital hex, as shown by gpg --list-keys (e.g. "621CC013").
 @end
 
 /**
+ * SignatureCollector structure
+ */
+@interface CryptoSignatureCollector : NSObject <goSeqRefInterface> {
+}
+@property(strong, readonly) _Nonnull id _ref;
+
+- (nonnull instancetype)initWithRef:(_Nonnull id)ref;
+- (nonnull instancetype)init;
+// skipped method SignatureCollector.Accept with unsupported parameter or return types
+
+/**
+ * GetSignature collected by Accept
+ */
+- (NSString* _Nonnull)getSignature;
+@end
+
+/**
  * SignatureVerificationError is returned from Decrypt and VerifyDetached functions when signature verification fails
  */
 @interface CryptoSignatureVerificationError : NSObject <goSeqRefInterface> {
@@ -710,5 +759,25 @@ FOUNDATION_EXPORT CryptoSymmetricKey* _Nullable CryptoNewSymmetricKeyFromToken(N
 
 // skipped function ReadKeyRing with unsupported parameter or return types
 
+
+@class CryptoMIMECallbacks;
+
+/**
+ * MIMECallbacks defines callback methods to process a MIME message.
+ */
+@interface CryptoMIMECallbacks : NSObject <goSeqRefInterface, CryptoMIMECallbacks> {
+}
+@property(strong, readonly) _Nonnull id _ref;
+
+- (nonnull instancetype)initWithRef:(_Nonnull id)ref;
+- (void)onAttachment:(NSString* _Nullable)headers data:(NSData* _Nullable)data;
+- (void)onBody:(NSString* _Nullable)body mimetype:(NSString* _Nullable)mimetype;
+/**
+ * Encrypted headers can be in an attachment and thus be placed at the end of the mime structure.
+ */
+- (void)onEncryptedHeaders:(NSString* _Nullable)headers;
+- (void)onError:(NSError* _Nullable)err;
+- (void)onVerified:(long)verified;
+@end
 
 #endif
