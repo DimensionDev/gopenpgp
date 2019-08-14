@@ -116,6 +116,20 @@ func (keyRing *KeyRing) GetSigningEntity() (*KeyEntity, error) {
 	return signEntity, nil
 }
 
+func (keyRing *KeyRing) GetEncryptionKey() (*PublicKey, error) {
+	var pub *packet.PublicKey
+	for _, e := range keyRing.GetEntities() {
+		if encryptionKey, ok := e.getRawEntity().EncryptionKey(pgp.getNow()); ok {
+			pub = encryptionKey.PublicKey
+			break
+		}
+	}
+	if pub == nil {
+		return nil, errors.New("cannot set key: no public key available")
+	}
+	return &PublicKey{*pub}, nil
+}
+
 // func (keyRing *KeyRing) GetSigningEntity() (*openpgp.Entity, error) {
 // 	var signEntity *openpgp.Entity
 

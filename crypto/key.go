@@ -236,13 +236,13 @@ func (p *PublicKey) GetKeyId() int {
 // KeyIdString returns the public key's fingerprint in capital hex
 // (e.g. "6C7EE1B8621CC013").
 func (p *PublicKey) KeyIdString() string {
-	return p.KeyIdString()
+	return p.PublicKey.KeyIdString()
 }
 
 // KeyIdShortString returns the short form of public key's fingerprint
 // in capital hex, as shown by gpg --list-keys (e.g. "621CC013").
 func (p *PublicKey) KeyIdShortString() string {
-	return p.KeyIdShortString()
+	return p.PublicKey.KeyIdShortString()
 }
 
 func (p *PublicKey) GetBitLength() (int, error) {

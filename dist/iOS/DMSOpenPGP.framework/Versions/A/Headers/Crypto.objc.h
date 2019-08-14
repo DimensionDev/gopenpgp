@@ -249,6 +249,7 @@ publicKey and returns a binary public-key encrypted session key packet.
  * GetArmoredPublicKey returns the armored public keys from this keyring.
  */
 - (NSString* _Nonnull)getArmoredPublicKey:(NSError* _Nullable* _Nullable)error;
+- (CryptoPublicKey* _Nullable)getEncryptionKey:(NSError* _Nullable* _Nullable)error;
 // skipped method KeyRing.GetEntities with unsupported parameter or return types
 
 - (long)getEntitiesCount;

@@ -67,22 +67,41 @@ class Tests: XCTestCase {
             var error: NSError?
             let rsaKeyRing = try pgp.buildKeyRingArmored(RSAKey)
             try rsaKeyRing.unlock(withPassphrase: "RSA")
-            let fingerprint = rsaKeyRing.getFingerprint(&error)
-            XCTAssertNil(error, "Fail to get fingerprint fo RSA, error: \(error?.localizedDescription)")
-            XCTAssertEqual(fingerprint.uppercased(), "E42B2DA77D952A02AE982612BF56D1DCD6DAEE91")
+            let entity = try rsaKeyRing.getEntity(0)
+            let pKey = entity.primaryKey
             
-            let entity = try rsaKeyRing.getSigningEntity()
-            let primaryKey = entity.primaryKey
-            XCTAssertEqual(primaryKey?.getFingerprint().uppercased(), "E42B2DA77D952A02AE982612BF56D1DCD6DAEE91")
+            let fingerprint = pKey?.getFingerprint()
+            XCTAssertNil(error, "Fail to get fingerprint fo RSA, error: \(error?.localizedDescription)")
+            XCTAssertEqual(fingerprint?.uppercased(), "E42B2DA77D952A02AE982612BF56D1DCD6DAEE91")
             
             var bitsLength: Int = 0
-            try primaryKey?.getBitLength(UnsafeMutablePointer<Int>(&bitsLength))
+            try pKey?.getBitLength(UnsafeMutablePointer<Int>(&bitsLength))
             XCTAssertEqual(bitsLength, 4096, "Wrong Bit Length")
             
-            let algo = primaryKey?.getAlgorithm()
+            let algo = pKey?.getAlgorithm()
             XCTAssertEqual(algo, CryptoPubKeyAlgoRSA, "Wrong Bit Length")
             
-            entity
+            let identity = try entity.getIdentity(0)
+            XCTAssertEqual(identity.userId?.getId(), "RSA <RSA@pgp.key>")
+            
+            let signKey = try rsaKeyRing.getSigningEntity().primaryKey
+            XCTAssertNotNil(signKey)
+            
+            XCTAssertEqual(signKey?.keyIdString(), "BF56D1DCD6DAEE91")
+            XCTAssertEqual(signKey?.keyIdShortString(), "D6DAEE91")
+            
+            
+            let encrypttionKey = try rsaKeyRing.getEncryptionKey()
+            XCTAssertNotNil(encrypttionKey)
+            XCTAssertEqual(encrypttionKey.getFingerprint().uppercased(), "EBED6EC3479D859D3838512E38A151F162F8FFF6")
+            XCTAssertEqual(encrypttionKey.keyIdString(), "38A151F162F8FFF6")
+            XCTAssertEqual(encrypttionKey.keyIdShortString(), "62F8FFF6")
+            
+            var encKeybitsLength: Int = 0
+            try encrypttionKey.getBitLength(UnsafeMutablePointer<Int>(&encKeybitsLength))
+            XCTAssertEqual(encKeybitsLength, 4096)
+            XCTAssertEqual(encrypttionKey.getAlgorithm(), CryptoPubKeyAlgoRSA)
+            
             
         } catch {
             XCTAssertTrue(false, "Fail to Enc/Dec binary data, error: \(error.localizedDescription)")
