@@ -46,7 +46,7 @@ func TestGenerateKeyRings(t *testing.T) {
 	}
 
 	testArmored := rsaPrivateKeyRing.GetEntities()[0]
-	_, err := testArmored.PrivateKey.GetArmored()
+	_, err := testArmored.PrivateKey.GetArmored("", "")
 	if err != nil {
 		t.Fatal("Cannot extract RSA public key:", err)
 	}
