@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "AA0559C4331FFB0A136D1F8FFBF5D6F6"
-               BuildableName = "DMSGopenpgp.framework"
+               BuildableName = "DMSGopenpgp"
                BlueprintName = "DMSGopenpgp"
                ReferencedContainer = "container:Pods.xcodeproj">
             </BuildableReference>

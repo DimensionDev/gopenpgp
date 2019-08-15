@@ -70,14 +70,14 @@ func (pgp GopenPGP) parseMIME(
 
 	var pgpKering openpgp.KeyRing
 	if verifierKey != nil {
-		pgpKering = verifierKey.entities
+		pgpKering = verifierKey.getRawEntities()
 	}
 
 	signatureCollector := newSignatureCollector(mimeVisitor, pgpKering, config)
 
 	err = gomime.VisitAll(bytes.NewReader(mmBodyData), h, signatureCollector)
 	if err == nil && verifierKey != nil {
-		err = signatureCollector.verified;
+		err = signatureCollector.verified
 	}
 
 	return bodyCollector,

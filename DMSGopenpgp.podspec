@@ -4,15 +4,14 @@ Pod::Spec.new do |spec|
   spec.summary      = "Mobile compatible OpenPGP library."
 
   spec.description  = <<-DESC
-  Mobile compatible OpenPGP library.
+  Mobile compatible OpenPGP library, modified by Dimension
                    DESC
   spec.homepage     = "https://github.com/DimensionDev/gopenpgp"
   spec.license      = { :type => 'AGPL', :file => 'LICENSE' }
   spec.author             = { "jk234ert" => "ugling88@hotmail.com" }
 
   spec.ios.deployment_target = "9.0"
-  spec.source       = { :git => "https://github.com/DimensionDev/gopenpgp.git", :branch => "feat/gomobileReady
-  "}
+  spec.source       = { :git => "https://github.com/DimensionDev/gopenpgp.git", :tag => "#{spec.version}" }
 
   spec.header_dir = 'dist/iOS/DMSOpenPGP.framework/Headers'
   # spec.source_files  = "Classes", "Classes/**/*.{h,m}"
