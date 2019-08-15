@@ -6,6 +6,7 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"io"
 	"math/big"
 	"strings"
 
@@ -13,6 +14,7 @@ import (
 	"github.com/DimensionDev/gopenpgp/constants"
 
 	"golang.org/x/crypto/openpgp"
+	cryptoArmor "golang.org/x/crypto/openpgp/armor"
 	"golang.org/x/crypto/openpgp/packet"
 )
 
@@ -194,4 +196,346 @@ func (pgp *GopenPGP) PrintFingerprints(pubKey string) (string, error) {
 		fmt.Println("PrimaryKey:" + hex.EncodeToString(e.PrimaryKey.Fingerprint[:]))
 	}
 	return "", nil
+}
+
+/* DMS customized KeyEntity and Key structs */
+const (
+	PubKeyAlgoRSA     int = 1
+	PubKeyAlgoElGamal int = 16
+	PubKeyAlgoDSA     int = 17
+	// RFC 6637, Section 5.
+	PubKeyAlgoECDH  int = 18
+	PubKeyAlgoECDSA int = 19
+	// https://www.ietf.org/archive/id/draft-koch-eddsa-for-openpgp-04.txt
+	PubKeyAlgoEdDSA int = 22
+
+	// Deprecated in RFC 4880, Section 13.5. Use key flags instead.
+	PubKeyAlgoRSAEncryptOnly int = 2
+	PubKeyAlgoRSASignOnly    int = 3
+)
+
+type PublicKey struct {
+	packet.PublicKey
+}
+
+func (p *PublicKey) GetCreationTimestamp() int {
+	return int(p.CreationTime.Unix())
+}
+
+func (p *PublicKey) GetAlgorithm() int {
+	return int(p.PubKeyAlgo)
+}
+
+func (p *PublicKey) GetFingerprint() string {
+	return hex.EncodeToString(p.Fingerprint[:])
+}
+
+func (p *PublicKey) GetKeyId() int {
+	return int(p.KeyId)
+}
+
+// KeyIdString returns the public key's fingerprint in capital hex
+// (e.g. "6C7EE1B8621CC013").
+func (p *PublicKey) KeyIdString() string {
+	return p.PublicKey.KeyIdString()
+}
+
+// KeyIdShortString returns the short form of public key's fingerprint
+// in capital hex, as shown by gpg --list-keys (e.g. "621CC013").
+func (p *PublicKey) KeyIdShortString() string {
+	return p.PublicKey.KeyIdShortString()
+}
+
+func (p *PublicKey) GetBitLength() (int, error) {
+	rawBitLength, err := p.BitLength()
+	bits := int(rawBitLength)
+	return bits, err
+}
+
+func (p *PublicKey) GetArmored(headerKey string, headerValue string) (string, error) {
+	b := &bytes.Buffer{}
+	// header := make(map[string]string)
+	// header[headerKey] = headerValue
+	aw, err := cryptoArmor.Encode(b, openpgp.PublicKeyType, nil)
+	if err != nil {
+		return "", err
+	}
+
+	err = p.PublicKey.Serialize(aw)
+	if err != nil {
+		aw.Close()
+		return "", err
+	}
+
+	err = aw.Close()
+	if err != nil {
+		return "", err
+	}
+	return b.String(), nil
+}
+
+type PrivateKey struct {
+	PublicKey
+	packet.PrivateKey
+}
+
+func (privKey *PrivateKey) GetEncrypted() bool {
+	return privKey.Encrypted
+}
+
+func (privKey *PrivateKey) GetArmored(headerKey string, headerValue string) (string, error) {
+	b := &bytes.Buffer{}
+	// header := make(map[string]string)
+	// header[headerKey] = headerValue
+	aw, err := cryptoArmor.Encode(b, openpgp.PrivateKeyType, nil)
+	if err != nil {
+		return "", err
+	}
+
+	err = privKey.PrivateKey.Serialize(aw)
+	if err != nil {
+		aw.Close()
+		return "", err
+	}
+
+	err = aw.Close()
+	if err != nil {
+		return "", err
+	}
+	return b.String(), nil
+}
+
+type UserId struct {
+	packet.UserId
+}
+
+func (u *UserId) GetName() string {
+	return u.Name
+}
+
+func (u *UserId) GetId() string {
+	return u.Id
+}
+
+func (u *UserId) GetComment() string {
+	return u.Comment
+}
+
+func (u *UserId) GetEmail() string {
+	return u.Email
+}
+
+type Identity struct {
+	Name          string // by convention, has the form "Full Name (comment) <email@example.com>"
+	UserId        *UserId
+	SelfSignature *Signature
+	Signatures    []*Signature
+}
+
+func genIdentity(rawIdentity *openpgp.Identity) *Identity {
+	id := new(Identity)
+	id.Name = rawIdentity.Name
+	id.UserId = &UserId{*rawIdentity.UserId}
+	id.SelfSignature = &Signature{*rawIdentity.SelfSignature}
+	var sigs []*Signature
+	for _, s := range rawIdentity.Signatures {
+		sigs = append(sigs, &Signature{*s})
+	}
+	id.Signatures = sigs
+	return id
+}
+
+func genIdentityList(rawIdentityMap map[string]*openpgp.Identity) []*Identity {
+	var idList []*Identity
+	for _, value := range rawIdentityMap {
+		idList = append(idList, genIdentity(value))
+	}
+	return idList
+}
+
+func getRawIdentity(identity *Identity) *openpgp.Identity {
+	rawId := new(openpgp.Identity)
+	rawId.Name = identity.Name
+	rawId.UserId = &identity.UserId.UserId
+	rawId.SelfSignature = &identity.SelfSignature.Signature
+	var sigs []*packet.Signature
+	for _, s := range identity.Signatures {
+		sigs = append(sigs, &s.Signature)
+	}
+	rawId.Signatures = sigs
+	return rawId
+}
+
+func genRawIdentityMap(identityMap []*Identity) map[string]*openpgp.Identity {
+	newMap := make(map[string]*openpgp.Identity)
+	for _, value := range identityMap {
+		newMap[value.Name] = getRawIdentity(value)
+	}
+	return newMap
+}
+
+type Subkey struct {
+	openpgp.Subkey
+}
+
+type KeyEntity struct {
+	PrimaryKey *PublicKey
+	PrivateKey *PrivateKey
+	// Identities  map[string]*Identity // indexed by Identity.Name
+	Identities  []*Identity // indexed by Identity.Name
+	Revocations []*Signature
+	Subkeys     []Subkey
+}
+
+func (k *KeyEntity) GetIdentityCount() int {
+	return len(k.Identities)
+}
+
+func (k *KeyEntity) GetIdentity(index int) (*Identity, error) {
+	if index >= len(k.Identities) {
+		return nil, errors.New("openpgp: index out of bounds, there are only " + string(len(k.Identities)) + "identities")
+	}
+	return k.Identities[index], nil
+}
+
+func (k *KeyEntity) getRawEntity() *openpgp.Entity {
+	var rawPrivKey *packet.PrivateKey
+	if k.PrivateKey != nil {
+		rawPrivKey = &k.PrivateKey.PrivateKey
+	}
+	return &openpgp.Entity{
+		PrimaryKey:  &k.PrimaryKey.PublicKey,
+		PrivateKey:  rawPrivKey,
+		Identities:  genRawIdentityMap(k.Identities),
+		Revocations: k.getRawRevocations(),
+		Subkeys:     k.getRawSubkeys(),
+	}
+}
+
+func (k *KeyEntity) getRawRevocations() []*packet.Signature {
+	var sigs []*packet.Signature
+	for _, s := range k.Revocations {
+		sigs = append(sigs, &s.Signature)
+	}
+	return sigs
+}
+
+func (k *KeyEntity) getRawSubkeys() []openpgp.Subkey {
+	var subkeys []openpgp.Subkey
+	for _, s := range k.Subkeys {
+		subkeys = append(subkeys, s.Subkey)
+	}
+	return subkeys
+}
+
+// Serialize writes the public part of the given Entity to w, including
+// signatures from other entities. No private key material will be output.
+func (k *KeyEntity) Serialize(w io.Writer) error {
+	err := k.PrimaryKey.Serialize(w)
+	if err != nil {
+		return err
+	}
+	for _, ident := range k.Identities {
+		err = ident.UserId.Serialize(w)
+		if err != nil {
+			return err
+		}
+		for _, sig := range ident.Signatures {
+			err = sig.Serialize(w)
+			if err != nil {
+				return err
+			}
+		}
+	}
+	for _, subkey := range k.Subkeys {
+		err = subkey.PublicKey.Serialize(w)
+		if err != nil {
+			return err
+		}
+		err = subkey.Sig.Serialize(w)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+type KeyEntityList []*KeyEntity
+
+// KeysById returns the set of keys that have the given key id.
+func (el KeyEntityList) KeysById(id uint64) (keys []openpgp.Key) {
+	for _, e := range el {
+		if e.PrimaryKey.KeyId == id {
+			var selfSig *packet.Signature
+			for _, ident := range e.Identities {
+				if selfSig == nil {
+					selfSig = &ident.SelfSignature.Signature
+				} else if ident.SelfSignature.IsPrimaryId != nil && *ident.SelfSignature.IsPrimaryId {
+					selfSig = &ident.SelfSignature.Signature
+					break
+				}
+			}
+			var rawPrivKey *packet.PrivateKey
+			if e.PrivateKey != nil {
+				rawPrivKey = &e.PrivateKey.PrivateKey
+			}
+			keys = append(keys, openpgp.Key{e.getRawEntity(), &e.PrimaryKey.PublicKey, rawPrivKey, selfSig})
+		}
+
+		for _, subKey := range e.Subkeys {
+			if subKey.PublicKey.KeyId == id {
+				keys = append(keys, openpgp.Key{e.getRawEntity(), subKey.PublicKey, subKey.PrivateKey, subKey.Sig})
+			}
+		}
+	}
+	return
+}
+
+// KeysByIdAndUsage returns the set of keys with the given id that also meet
+// the key usage given by requiredUsage.  The requiredUsage is expressed as
+// the bitwise-OR of packet.KeyFlag* values.
+func (el KeyEntityList) KeysByIdUsage(id uint64, requiredUsage byte) (keys []openpgp.Key) {
+	for _, key := range el.KeysById(id) {
+		if len(key.Entity.Revocations) > 0 {
+			continue
+		}
+
+		if key.SelfSignature.RevocationReason != nil {
+			continue
+		}
+
+		if key.SelfSignature.FlagsValid && requiredUsage != 0 {
+			var usage byte
+			if key.SelfSignature.FlagCertify {
+				usage |= packet.KeyFlagCertify
+			}
+			if key.SelfSignature.FlagSign {
+				usage |= packet.KeyFlagSign
+			}
+			if key.SelfSignature.FlagEncryptCommunications {
+				usage |= packet.KeyFlagEncryptCommunications
+			}
+			if key.SelfSignature.FlagEncryptStorage {
+				usage |= packet.KeyFlagEncryptStorage
+			}
+			if usage&requiredUsage != requiredUsage {
+				continue
+			}
+		}
+
+		keys = append(keys, key)
+	}
+	return
+}
+
+// DecryptionKeys returns all private keys that are valid for decryption.
+func (el KeyEntityList) DecryptionKeys() (keys []openpgp.Key) {
+	for _, e := range el {
+		for _, subKey := range e.Subkeys {
+			if subKey.PrivateKey != nil && (!subKey.Sig.FlagsValid || subKey.Sig.FlagEncryptStorage || subKey.Sig.FlagEncryptCommunications) {
+				keys = append(keys, openpgp.Key{e.getRawEntity(), subKey.PublicKey, subKey.PrivateKey, subKey.Sig})
+			}
+		}
+	}
+	return
 }

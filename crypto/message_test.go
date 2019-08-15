@@ -104,7 +104,7 @@ func TestIssue11(t *testing.T) {
 		t.Fatal("Expected no error while bulding private keyring, got:", err)
 	}
 
-	err = myKeyring.UnlockWithPassphrase("1234");
+	err = myKeyring.UnlockWithPassphrase("1234")
 	if err != nil {
 		t.Fatal("Expected no error while unlocking private keyring, got:", err)
 	}
@@ -114,7 +114,7 @@ func TestIssue11(t *testing.T) {
 		t.Fatal("Expected no error while building public keyring, got:", err)
 	}
 
-	assert.Exactly(t, []uint64{0x643b3595e6ee4fdf}, senderKeyring.KeyIds())
+	assert.Exactly(t, []int{0x643b3595e6ee4fdf}, senderKeyring.KeyIds())
 
 	pgpMessage, err := NewPGPMessageFromArmored(readTestFile("issue11_message", false))
 	if err != nil {

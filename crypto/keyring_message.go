@@ -45,7 +45,7 @@ func (keyRing *KeyRing) SignDetached(message *PlainMessage) (*PGPSignature, erro
 	config := &packet.Config{DefaultHash: crypto.SHA512, Time: pgp.getTimeGenerator()}
 	var outBuf bytes.Buffer
 	//sign bin
-	if err := openpgp.DetachSign(&outBuf, signEntity, message.NewReader(), config); err != nil {
+	if err := openpgp.DetachSign(&outBuf, signEntity.getRawEntity(), message.NewReader(), config); err != nil {
 		return nil, err
 	}
 
@@ -56,9 +56,9 @@ func (keyRing *KeyRing) SignDetached(message *PlainMessage) (*PGPSignature, erro
 // and returns a SignatureVerificationError if fails
 func (keyRing *KeyRing) VerifyDetached(
 	message *PlainMessage, signature *PGPSignature, verifyTime int64,
-) (error) {
+) error {
 	return verifySignature(
-		keyRing.GetEntities(),
+		keyRing.getRawEntities(),
 		message.NewReader(),
 		signature.GetBinary(),
 		verifyTime,
@@ -71,10 +71,10 @@ func (keyRing *KeyRing) VerifyDetached(
 func asymmetricEncrypt(data []byte, publicKey *KeyRing, privateKey *KeyRing, isBinary bool) ([]byte, error) {
 	var outBuf bytes.Buffer
 	var encryptWriter io.WriteCloser
-	var signEntity *openpgp.Entity
+	var signEntity *KeyEntity
 	var err error
 
-	if privateKey != nil && len(privateKey.entities) > 0 {
+	if privateKey != nil && len(privateKey.Entities) > 0 {
 		var err error
 		signEntity, err = privateKey.GetSigningEntity()
 		if err != nil {
@@ -88,11 +88,14 @@ func asymmetricEncrypt(data []byte, publicKey *KeyRing, privateKey *KeyRing, isB
 		IsBinary: isBinary,
 		FileName: "",
 	}
-
+	var rawSignEntity *openpgp.Entity
+	if signEntity != nil {
+		rawSignEntity = signEntity.getRawEntity()
+	}
 	if isBinary {
-		encryptWriter, err = openpgp.Encrypt(&outBuf, publicKey.entities, signEntity, hints, config)
+		encryptWriter, err = openpgp.Encrypt(&outBuf, publicKey.getRawEntities(), rawSignEntity, hints, config)
 	} else {
-		encryptWriter, err = openpgp.EncryptText(&outBuf, publicKey.entities, signEntity, hints, config)
+		encryptWriter, err = openpgp.EncryptText(&outBuf, publicKey.getRawEntities(), rawSignEntity, hints, config)
 	}
 	if err != nil {
 		return nil, err
@@ -113,7 +116,7 @@ func asymmetricDecrypt(
 	encryptedIO io.Reader, privateKey *KeyRing, verifyKey *KeyRing, verifyTime int64,
 ) (plaintext []byte, err error) {
 	privKeyEntries := privateKey.GetEntities()
-	var additionalEntries openpgp.EntityList
+	var additionalEntries []*KeyEntity
 
 	if verifyKey != nil {
 		additionalEntries = verifyKey.GetEntities()
@@ -125,7 +128,7 @@ func asymmetricDecrypt(
 
 	config := &packet.Config{Time: pgp.getTimeGenerator()}
 
-	messageDetails, err := openpgp.ReadMessage(encryptedIO, privKeyEntries, nil, config)
+	messageDetails, err := openpgp.ReadMessage(encryptedIO, KeyEntityList(privKeyEntries), nil, config)
 	if err != nil {
 		return nil, err
 	}

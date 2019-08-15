@@ -38,7 +38,7 @@ func (keyRing *KeyRing) DecryptSessionKey(keyPacket []byte) (*SymmetricKey, erro
 
 	ek := p.(*packet.EncryptedKey)
 	var decryptErr error
-	for _, key := range keyRing.entities.DecryptionKeys() {
+	for _, key := range keyRing.getRawEntities().DecryptionKeys() {
 		priv := key.PrivateKey
 		if priv.Encrypted {
 			continue
@@ -69,7 +69,7 @@ func (keyRing *KeyRing) EncryptSessionKey(sessionSplit *SymmetricKey) ([]byte, e
 
 	var pub *packet.PublicKey
 	for _, e := range keyRing.GetEntities() {
-		if encryptionKey, ok := e.EncryptionKey(pgp.getNow()); ok {
+		if encryptionKey, ok := e.getRawEntity().EncryptionKey(pgp.getNow()); ok {
 			pub = encryptionKey.PublicKey
 			break
 		}

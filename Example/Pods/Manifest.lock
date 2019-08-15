@@ -1,5 +1,5 @@
 PODS:
-  - DMSGopenpgp (0.1.0)
+  - DMSGopenpgp (0.0.1)
 
 DEPENDENCIES:
   - DMSGopenpgp (from `../`)
@@ -9,7 +9,7 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  DMSGopenpgp: 6ce6da0428451378fb2cda24fe30bda805ca4125
+  DMSGopenpgp: 5fdf331208d5a1952b2d7af49754f31b706faf7e
 
 PODFILE CHECKSUM: e0c99d21d05231a88c873a2eefc455ec2466604f
 

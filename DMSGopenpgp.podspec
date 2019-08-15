@@ -4,7 +4,7 @@ Pod::Spec.new do |spec|
   spec.summary      = "Mobile compatible OpenPGP library."
 
   spec.description  = <<-DESC
-  Mobile compatible OpenPGP library.
+  Mobile compatible OpenPGP library, modified by Dimension
                    DESC
   spec.homepage     = "https://github.com/DimensionDev/gopenpgp"
   spec.license      = { :type => 'AGPL', :file => 'LICENSE' }

@@ -20,11 +20,16 @@ import (
 )
 
 // KeyRing contains multiple private and public keys.
-type KeyRing struct {
-	// PGP entities in this keyring.
-	entities openpgp.EntityList
+// type KeyRing struct {
+// 	// PGP entities in this keyring.
+// 	entities openpgp.EntityList
 
-	// FirstKeyID as obtained from API to match salt
+// 	// FirstKeyID as obtained from API to match salt
+// 	FirstKeyID string
+// }
+
+type KeyRing struct {
+	Entities   []*KeyEntity
 	FirstKeyID string
 }
 
@@ -45,24 +50,59 @@ func (ko *pgpKeyObject) PrivateKeyReader() io.Reader {
 }
 
 // Identity contains the name and the email of a key holder.
-type Identity struct {
-	Name  string
-	Email string
-}
+// type Identity struct {
+// 	Name  string
+// 	Email string
+// }
 
 // GetEntities returns openpgp entities contained in this KeyRing.
-func (keyRing *KeyRing) GetEntities() openpgp.EntityList {
-	return keyRing.entities
+// func (keyRing *KeyRing) getRawEntities() openpgp.EntityList {
+// 	return keyRing.entities
+// }
+
+func (keyRing *KeyRing) GetEntitiesCount() int {
+	return len(keyRing.Entities)
+}
+
+func (keyRing *KeyRing) GetEntity(index int) (*KeyEntity, error) {
+	if index >= len(keyRing.Entities) {
+		return nil, errors.New("openpgp: index out of bounds, there are only " + string(len(keyRing.Entities)) + "entities")
+	}
+	return keyRing.Entities[index], nil
+}
+
+func (keyRing *KeyRing) GetEntities() []*KeyEntity {
+	return keyRing.Entities
+}
+
+func (keyRing *KeyRing) getRawEntities() openpgp.EntityList {
+	var rawEntities openpgp.EntityList
+	for _, de := range keyRing.Entities {
+		var rawPrivKey *packet.PrivateKey
+		if de.PrivateKey != nil {
+			rawPrivKey = &de.PrivateKey.PrivateKey
+		}
+		re := &openpgp.Entity{
+			PrimaryKey:  &de.PrimaryKey.PublicKey,
+			PrivateKey:  rawPrivKey,
+			Identities:  genRawIdentityMap(de.Identities),
+			Revocations: de.getRawRevocations(),
+			Subkeys:     de.getRawSubkeys(),
+		}
+
+		rawEntities = append(rawEntities, re)
+	}
+	return rawEntities
 }
 
 // GetSigningEntity returns first private unlocked signing entity from keyring.
-func (keyRing *KeyRing) GetSigningEntity() (*openpgp.Entity, error) {
-	var signEntity *openpgp.Entity
+func (keyRing *KeyRing) GetSigningEntity() (*KeyEntity, error) {
+	var signEntity *KeyEntity
 
-	for _, e := range keyRing.entities {
+	for _, e := range keyRing.Entities {
 		// Entity.PrivateKey must be a signing key
 		if e.PrivateKey != nil {
-			if !e.PrivateKey.Encrypted {
+			if !e.PrivateKey.GetEncrypted() {
 				signEntity = e
 				break
 			}
@@ -76,6 +116,40 @@ func (keyRing *KeyRing) GetSigningEntity() (*openpgp.Entity, error) {
 	return signEntity, nil
 }
 
+func (keyRing *KeyRing) GetEncryptionKey() (*PublicKey, error) {
+	var pub *packet.PublicKey
+	for _, e := range keyRing.GetEntities() {
+		if encryptionKey, ok := e.getRawEntity().EncryptionKey(pgp.getNow()); ok {
+			pub = encryptionKey.PublicKey
+			break
+		}
+	}
+	if pub == nil {
+		return nil, errors.New("cannot set key: no public key available")
+	}
+	return &PublicKey{*pub}, nil
+}
+
+// func (keyRing *KeyRing) GetSigningEntity() (*openpgp.Entity, error) {
+// 	var signEntity *openpgp.Entity
+
+// 	for _, e := range keyRing.entities {
+// 		// Entity.PrivateKey must be a signing key
+// 		if e.PrivateKey != nil {
+// 			if !e.PrivateKey.Encrypted {
+// 				signEntity = e
+// 				break
+// 			}
+// 		}
+// 	}
+// 	if signEntity == nil {
+// 		err := errors.New("gopenpgp: cannot sign message, unable to unlock signer key")
+// 		return signEntity, err
+// 	}
+
+// 	return signEntity, nil
+// }
+
 // Unlock tries to unlock as many keys as possible with the following password. Note
 // that keyrings can contain keys locked with different passwords, and thus
 // err == nil does not mean that all keys have been successfully decrypted.
@@ -84,10 +158,10 @@ func (keyRing *KeyRing) GetSigningEntity() (*openpgp.Entity, error) {
 func (keyRing *KeyRing) Unlock(passphrase []byte) error {
 	// Build a list of keys to decrypt
 	var keys []*packet.PrivateKey
-	for _, e := range keyRing.entities {
+	for _, e := range keyRing.Entities {
 		// Entity.PrivateKey must be a signing key
 		if e.PrivateKey != nil {
-			keys = append(keys, e.PrivateKey)
+			keys = append(keys, &e.PrivateKey.PrivateKey)
 		}
 
 		// Entity.Subkeys can be used for encryption
@@ -134,7 +208,7 @@ func (keyRing *KeyRing) WriteArmoredPublicKey(w io.Writer) (err error) {
 		return
 	}
 
-	for _, e := range keyRing.entities {
+	for _, e := range keyRing.Entities {
 		if err = e.Serialize(aw); err != nil {
 			aw.Close()
 			return
@@ -158,7 +232,7 @@ func (keyRing *KeyRing) GetArmoredPublicKey() (s string, err error) {
 
 // WritePublicKey outputs unarmored public keys from the keyring to w.
 func (keyRing *KeyRing) WritePublicKey(w io.Writer) (err error) {
-	for _, e := range keyRing.entities {
+	for _, e := range keyRing.Entities {
 		if err = e.Serialize(w); err != nil {
 			return
 		}
@@ -180,7 +254,7 @@ func (keyRing *KeyRing) GetPublicKey() (b []byte, err error) {
 
 // GetFingerprint gets the fingerprint from the keyring.
 func (keyRing *KeyRing) GetFingerprint() (string, error) {
-	for _, entity := range keyRing.entities {
+	for _, entity := range keyRing.Entities {
 		fp := entity.PrimaryKey.Fingerprint
 		return hex.EncodeToString(fp[:]), nil
 	}
@@ -191,8 +265,10 @@ func (keyRing *KeyRing) GetFingerprint() (string, error) {
 func (keyRing *KeyRing) CheckPassphrase(passphrase string) bool {
 	var keys []*packet.PrivateKey
 
-	for _, entity := range keyRing.entities {
-		keys = append(keys, entity.PrivateKey)
+	for _, entity := range keyRing.Entities {
+		if entity.PrivateKey != nil {
+			keys = append(keys, &entity.PrivateKey.PrivateKey)
+		}
 	}
 	var decryptError error
 	var n int
@@ -255,8 +331,8 @@ func (keyRing *KeyRing) readFrom(r io.Reader, armored bool) error {
 	if len(entities) == 0 {
 		return errors.New("gopenpgp: key ring doesn't contain any key")
 	}
-
-	keyRing.entities = append(keyRing.entities, entities...)
+	newEntities := genDMSEntities(entities)
+	keyRing.Entities = append(keyRing.Entities, newEntities...)
 	return nil
 }
 
@@ -283,7 +359,8 @@ func (pgp *GopenPGP) BuildKeyRingArmored(key string) (keyRing *KeyRing, err erro
 	}
 	keyReader := bytes.NewReader(keyRaw)
 	keyEntries, err := openpgp.ReadKeyRing(keyReader)
-	return &KeyRing{entities: keyEntries}, err
+	keyEntities := genDMSEntities(keyEntries)
+	return &KeyRing{Entities: keyEntities}, err
 }
 
 // ReadFromJSON reads multiple keys from a json array and fills the keyring
@@ -343,7 +420,7 @@ func (keyRing *KeyRing) UnlockJSONKeyRing(jsonData []byte) (newKeyRing *KeyRing,
 
 // newKeyRingFromPGPKeyObject fills a KeyRing given an array of pgpKeyObject
 func (keyRing *KeyRing) newKeyRingFromPGPKeyObject(keyObjs []pgpKeyObject) error {
-	keyRing.entities = nil
+	keyRing.Entities = nil
 	for i, ko := range keyObjs {
 		if i == 0 {
 			keyRing.FirstKeyID = ko.ID
@@ -371,24 +448,35 @@ func unmarshalJSON(jsonData []byte) ([]pgpKeyObject, error) {
 }
 
 // Identities returns the list of identities associated with this key ring.
-func (keyRing *KeyRing) Identities() []*Identity {
-	var identities []*Identity
-	for _, e := range keyRing.entities {
-		for _, id := range e.Identities {
-			identities = append(identities, &Identity{
-				Name:  id.UserId.Name,
-				Email: id.UserId.Email,
-			})
-		}
-	}
-	return identities
-}
+// func (keyRing *KeyRing) Identities() []*Identity {
+// 	var identities []*Identity
+// 	for _, e := range keyRing.Entities {
+// 		for _, id := range e.Identities {
+// 			identities = append(identities, e.Identities[id.Name])
+// 		}
+// 	}
+// 	return identities
+// }
+
+// func (keyRing *KeyRing) Identities() []*Identity {
+// 	var identities []*Identity
+// 	for _, e := range keyRing.Entities {
+// 		for _, id := range e.Identities {
+// 			&Identity{Name: id.Name, UserId: id.UserId}
+// 			identities = append(identities, &Identity{
+// 				Name:  id.UserId.Name,
+// 				Email: id.UserId.Email,
+// 			})
+// 		}
+// 	}
+// 	return identities
+// }
 
 // KeyIds returns array of IDs of keys in this KeyRing.
-func (keyRing *KeyRing) KeyIds() []uint64 {
-	var res []uint64
-	for _, e := range keyRing.entities {
-		res = append(res, e.PrimaryKey.KeyId)
+func (keyRing *KeyRing) KeyIds() []int {
+	var res []int
+	for _, e := range keyRing.Entities {
+		res = append(res, e.PrimaryKey.GetKeyId())
 	}
 	return res
 }
@@ -446,4 +534,37 @@ func FilterExpiredKeys(contactKeys []*KeyRing) (filteredKeys []*KeyRing, err err
 	}
 
 	return filteredKeys, nil
+}
+
+func genDMSEntities(rawEntities openpgp.EntityList) []*KeyEntity {
+	var dmsEntities []*KeyEntity
+	for _, e := range rawEntities {
+		de := new(KeyEntity)
+		de.PrimaryKey = &PublicKey{*e.PrimaryKey}
+
+		if e.PrivateKey != nil {
+			newPrivKey := new(PrivateKey)
+			newPrivKey.PublicKey = PublicKey{e.PrivateKey.PublicKey}
+			newPrivKey.PrivateKey = *e.PrivateKey
+			de.PrivateKey = newPrivKey
+		}
+
+		de.Identities = genIdentityList(e.Identities)
+
+		var revocations []*Signature
+		for _, re := range e.Revocations {
+			revocations = append(revocations, &Signature{*re})
+		}
+		de.Revocations = revocations
+
+		var subkeys []Subkey
+		for _, sk := range e.Subkeys {
+			subkeys = append(subkeys, Subkey{sk})
+		}
+		de.Revocations = revocations
+		de.Subkeys = subkeys
+
+		dmsEntities = append(dmsEntities, de)
+	}
+	return dmsEntities
 }
