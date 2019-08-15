@@ -464,6 +464,7 @@ ready for encryption, signature, or verification from an unencrypted string.
 - (BOOL)decrypt:(NSData* _Nullable)passphrase error:(NSError* _Nullable* _Nullable)error;
 - (BOOL)encrypt:(NSData* _Nullable)passphrase error:(NSError* _Nullable* _Nullable)error;
 - (long)getAlgorithm;
+- (NSString* _Nonnull)getArmored:(NSString* _Nullable)headerKey headerValue:(NSString* _Nullable)headerValue error:(NSError* _Nullable* _Nullable)error;
 - (BOOL)getBitLength:(long* _Nullable)ret0_ error:(NSError* _Nullable* _Nullable)error;
 - (long)getCreationTimestamp;
 - (BOOL)getEncrypted;
@@ -491,6 +492,7 @@ ready for encryption, signature, or verification from an unencrypted string.
 
 - (BOOL)canSign;
 - (long)getAlgorithm;
+- (NSString* _Nonnull)getArmored:(NSString* _Nullable)headerKey headerValue:(NSString* _Nullable)headerValue error:(NSError* _Nullable* _Nullable)error;
 - (BOOL)getBitLength:(long* _Nullable)ret0_ error:(NSError* _Nullable* _Nullable)error;
 - (long)getCreationTimestamp;
 - (NSString* _Nonnull)getFingerprint;

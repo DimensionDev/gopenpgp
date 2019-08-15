@@ -14,6 +14,7 @@ import (
 	"github.com/DimensionDev/gopenpgp/constants"
 
 	"golang.org/x/crypto/openpgp"
+	cryptoArmor "golang.org/x/crypto/openpgp/armor"
 	"golang.org/x/crypto/openpgp/packet"
 )
 
@@ -251,6 +252,28 @@ func (p *PublicKey) GetBitLength() (int, error) {
 	return bits, err
 }
 
+func (p *PublicKey) GetArmored(headerKey string, headerValue string) (string, error) {
+	b := &bytes.Buffer{}
+	// header := make(map[string]string)
+	// header[headerKey] = headerValue
+	aw, err := cryptoArmor.Encode(b, openpgp.PublicKeyType, nil)
+	if err != nil {
+		return "", err
+	}
+
+	err = p.PublicKey.Serialize(aw)
+	if err != nil {
+		aw.Close()
+		return "", err
+	}
+
+	err = aw.Close()
+	if err != nil {
+		return "", err
+	}
+	return b.String(), nil
+}
+
 type PrivateKey struct {
 	PublicKey
 	packet.PrivateKey
@@ -258,6 +281,28 @@ type PrivateKey struct {
 
 func (privKey *PrivateKey) GetEncrypted() bool {
 	return privKey.Encrypted
+}
+
+func (privKey *PrivateKey) GetArmored(headerKey string, headerValue string) (string, error) {
+	b := &bytes.Buffer{}
+	// header := make(map[string]string)
+	// header[headerKey] = headerValue
+	aw, err := cryptoArmor.Encode(b, openpgp.PrivateKeyType, nil)
+	if err != nil {
+		return "", err
+	}
+
+	err = privKey.PrivateKey.Serialize(aw)
+	if err != nil {
+		aw.Close()
+		return "", err
+	}
+
+	err = aw.Close()
+	if err != nil {
+		return "", err
+	}
+	return b.String(), nil
 }
 
 type UserId struct {

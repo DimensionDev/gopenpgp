@@ -7,7 +7,6 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-
 	"golang.org/x/crypto/rsa"
 )
 
@@ -44,6 +43,12 @@ func TestGenerateKeyRings(t *testing.T) {
 	rsaPrivateKeyRing, err = ReadArmoredKeyRing(strings.NewReader(rsaKey))
 	if err != nil {
 		t.Fatal("Cannot read RSA key:", err)
+	}
+
+	testArmored := rsaPrivateKeyRing.GetEntities()[0]
+	_, err := testArmored.PrivateKey.GetArmored()
+	if err != nil {
+		t.Fatal("Cannot extract RSA public key:", err)
 	}
 
 	rsaPublicKey, err = rsaPrivateKeyRing.GetArmoredPublicKey()

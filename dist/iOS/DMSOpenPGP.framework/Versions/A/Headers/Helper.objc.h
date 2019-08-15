@@ -27,9 +27,10 @@
 @end
 
 /**
- * DecryptMessageArmored decrypts an armored PGP message given a private key and its passphrase
+ * 	return message.GetString(), nil
+}
  */
-FOUNDATION_EXPORT NSString* _Nonnull HelperDecryptMessageArmored(NSString* _Nullable privateKey, NSString* _Nullable passphrase, NSString* _Nullable ciphertext, NSError* _Nullable* _Nullable error);
+FOUNDATION_EXPORT NSString* _Nonnull HelperDecryptMessageArmored(CryptoKeyRing* _Nullable privateKeyRing, NSString* _Nullable passphrase, NSString* _Nullable ciphertext, NSError* _Nullable* _Nullable error);
 
 /**
  * DecryptMessageWithToken decrypts an armored message with a random token.
@@ -42,19 +43,15 @@ FOUNDATION_EXPORT NSString* _Nonnull HelperDecryptMessageWithToken(NSString* _Nu
 and an armored (!) signature, given a publicKey, and a privateKey with its passphrase.
 Returns the plain data or an error on signature verification failure.
  */
-FOUNDATION_EXPORT NSData* _Nullable HelperDecryptVerifyAttachment(NSString* _Nullable publicKey, NSString* _Nullable privateKey, NSString* _Nullable passphrase, NSData* _Nullable keyPacket, NSData* _Nullable dataPacket, NSString* _Nullable armoredSignature, NSError* _Nullable* _Nullable error);
+FOUNDATION_EXPORT NSData* _Nullable HelperDecryptVerifyAttachment(CryptoKeyRing* _Nullable publicKeyRing, CryptoKeyRing* _Nullable privateKeyRing, NSString* _Nullable passphrase, NSData* _Nullable keyPacket, NSData* _Nullable dataPacket, NSString* _Nullable armoredSignature, NSError* _Nullable* _Nullable error);
 
 /**
- * DecryptVerifyMessageArmored decrypts an armored PGP message given a private key and its passphrase
-and verifies the embedded signature.
-Returns the plain data or an error on signature verification failure.
+ * 	return message.GetString(), nil
+}
  */
-FOUNDATION_EXPORT NSString* _Nonnull HelperDecryptVerifyMessageArmored(NSString* _Nullable publicKey, NSString* _Nullable privateKey, NSString* _Nullable passphrase, NSString* _Nullable ciphertext, NSError* _Nullable* _Nullable error);
+FOUNDATION_EXPORT NSString* _Nonnull HelperDecryptVerifyMessageArmored(CryptoKeyRing* _Nullable publicKeyRing, CryptoKeyRing* _Nullable privateKeyRing, NSString* _Nullable passphrase, NSString* _Nullable ciphertext, NSError* _Nullable* _Nullable error);
 
-/**
- * EncryptMessageArmored generates an armored PGP message given a plaintext and an armored public key
- */
-FOUNDATION_EXPORT NSString* _Nonnull HelperEncryptMessageArmored(NSString* _Nullable publicKey, NSString* _Nullable plaintext, NSError* _Nullable* _Nullable error);
+FOUNDATION_EXPORT NSString* _Nonnull HelperEncryptMessageArmored(CryptoKeyRing* _Nullable publicKeyRing, NSString* _Nullable plaintext, NSError* _Nullable* _Nullable error);
 
 /**
  * EncryptMessageWithToken encrypts a string with a passphrase using AES256
@@ -71,13 +68,13 @@ FOUNDATION_EXPORT NSString* _Nonnull HelperEncryptMessageWithTokenAlgo(NSString*
 and its passphrase, the filename, and the unencrypted file data.
 Returns keypacket, dataPacket and unarmored (!) signature separate.
  */
-FOUNDATION_EXPORT HelperEncryptedSignAttachment* _Nullable HelperEncryptSignAttachment(NSString* _Nullable publicKey, NSString* _Nullable privateKey, NSString* _Nullable passphrase, NSString* _Nullable fileName, NSData* _Nullable plainData, NSError* _Nullable* _Nullable error);
+FOUNDATION_EXPORT HelperEncryptedSignAttachment* _Nullable HelperEncryptSignAttachment(CryptoKeyRing* _Nullable publicKeyRing, CryptoKeyRing* _Nullable privateKeyRing, NSString* _Nullable passphrase, NSString* _Nullable fileName, NSData* _Nullable plainData, NSError* _Nullable* _Nullable error);
 
 /**
- * EncryptSignMessageArmored generates an armored signed PGP message given a plaintext and an armored public key
-a private key and its passphrase
+ * 	return ciphertext, nil
+}
  */
-FOUNDATION_EXPORT NSString* _Nonnull HelperEncryptSignMessageArmored(NSString* _Nullable publicKey, NSString* _Nullable privateKey, NSString* _Nullable passphrase, NSString* _Nullable plaintext, NSError* _Nullable* _Nullable error);
+FOUNDATION_EXPORT NSString* _Nonnull HelperEncryptSignMessageArmored(CryptoKeyRing* _Nullable publicKeyRing, CryptoKeyRing* _Nullable privateKeyRing, NSString* _Nullable passphrase, NSString* _Nullable plaintext, NSError* _Nullable* _Nullable error);
 
 /**
  * SignCleartextMessage signs text given a private keyring, canonicalizes and trims the newlines,

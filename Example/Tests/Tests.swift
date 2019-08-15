@@ -1,9 +1,21 @@
 import XCTest
 import DMSOpenPGP
 
-class Tests: XCTestCase {
+class DMSGopenPGPTests: XCTestCase {
     
-    let pgp = CryptoGetGopenPGP()!
+    static let pgp = CryptoGetGopenPGP()!
+    
+    static var alice = generateKeyRing(name: "Alice", email: "Alice@gmail.com", passphrase: "Alice")!
+    static var bob = generateKeyRing(name: "Bob", email: "Bob@gmail.com", passphrase: "Bob")!
+    static var eve = generateKeyRing(name: "Eve", email: "Eve@gmail.com", passphrase: "Eve")!
+    
+    static var testKeyRings: [(CryptoKeyRing, String)] {
+        return [
+            (alice, "Alice"),
+            (bob, "Bob"),
+            (eve, "Eve")
+        ]
+    }
     
     override func setUp() {
         super.setUp()
@@ -13,18 +25,6 @@ class Tests: XCTestCase {
     override func tearDown() {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
         super.tearDown()
-    }
-    
-    func testExample() {
-        // This is an example of a functional test case.
-        XCTAssert(true, "Pass")
-    }
-    
-    func testPerformanceExample() {
-        // This is an example of a performance test case.
-        self.measure() {
-            // Put the code you want to measure the time of here.
-        }
     }
     
     func testSimpleEncDec() {
@@ -65,13 +65,13 @@ class Tests: XCTestCase {
     func testRSAKey() {
         do {
             var error: NSError?
-            let rsaKeyRing = try pgp.buildKeyRingArmored(RSAKey)
+            let rsaKeyRing = try DMSGopenPGPTests.pgp.buildKeyRingArmored(RSAKey)
             try rsaKeyRing.unlock(withPassphrase: "RSA")
             let entity = try rsaKeyRing.getEntity(0)
             let pKey = entity.primaryKey
             
             let fingerprint = pKey?.getFingerprint()
-            XCTAssertNil(error, "Fail to get fingerprint fo RSA, error: \(error?.localizedDescription)")
+            XCTAssertNil(error, "Fail to get fingerprint fo RSA, error: \(String(describing: error?.localizedDescription))")
             XCTAssertEqual(fingerprint?.uppercased(), "E42B2DA77D952A02AE982612BF56D1DCD6DAEE91")
             
             var bitsLength: Int = 0
@@ -107,10 +107,138 @@ class Tests: XCTestCase {
             XCTAssertTrue(false, "Fail to Enc/Dec binary data, error: \(error.localizedDescription)")
         }
     }
+    
+    // 3072 DSA + 3072 ELG-E PGP Key
+    func testDSAKey() {
+        do {
+            let key = DSAKey
+            let dsaKeyRing = try DMSGopenPGPTests.pgp.buildKeyRingArmored(key)
+            try dsaKeyRing.unlock(withPassphrase: "DSA")
+            let primaryKey = try dsaKeyRing.getEntity(0).primaryKey
+            let primarySiningKey = try dsaKeyRing.getSigningEntity().primaryKey
+            let primaryEncryptionKey = try dsaKeyRing.getEncryptionKey()
+            XCTAssertEqual(primaryKey?.getFingerprint().uppercased(), "4E208F2768671661679869E99D709FFE1D0DAC7F")
+            
+            var bitsLength: Int = 0
+            try primaryKey?.getBitLength(UnsafeMutablePointer<Int>(&bitsLength))
+            XCTAssertEqual(bitsLength, 3072)
+            XCTAssertEqual(primaryKey?.getAlgorithm(), CryptoPubKeyAlgoDSA)
+            
+            let userID = try dsaKeyRing.getEntity(0).getIdentity(0).userId
+            XCTAssertNotNil(userID)
+            XCTAssertEqual(userID?.getId(), "DSA <DSA@pgp.key>")
+            
+            XCTAssertNotNil(primarySiningKey)
+            XCTAssertEqual(primaryKey?.getFingerprint(), primarySiningKey?.getFingerprint())
+            XCTAssertEqual(primarySiningKey?.keyIdString(), "9D709FFE1D0DAC7F")
+            XCTAssertEqual(primarySiningKey?.keyIdShortString(), "1D0DAC7F")
+            
+            XCTAssertNotNil(primaryEncryptionKey)
+            XCTAssertEqual(primaryEncryptionKey.getFingerprint().uppercased(), "0A40D7E300A14D01E23D3C5A7A298C4EDFEE2E69")
+            XCTAssertEqual(primaryEncryptionKey.keyIdString(), "7A298C4EDFEE2E69")
+            XCTAssertEqual(primaryEncryptionKey.keyIdShortString(), "DFEE2E69")
+            var encbitsLength: Int = 0
+            try primaryEncryptionKey.getBitLength(UnsafeMutablePointer<Int>(&encbitsLength))
+            XCTAssertEqual(encbitsLength, 3072)
+            XCTAssertEqual(primaryEncryptionKey.getAlgorithm(), CryptoPubKeyAlgoElGamal)
+        } catch {
+            XCTAssertTrue(false, "Fail to Enc/Dec binary data, error: \(error.localizedDescription)")
+        }
+    }
+    
+    func testDMSPGPSign_ClearText() {
+        measure {
+            DMSGopenPGPTests.testKeyRings.forEach { keyring in
+                DMSGopenPGPTests.signClearText(keyRing: keyring.0)
+            }
+        }
+    }
+    
+    func testDMSPGPEncryptWithoutSign() {
+        measure {
+            DMSGopenPGPTests.testKeyRings.forEach { keyring in
+                DMSGopenPGPTests.encryptWithoutSign(keyRing: keyring.0, passphrase: keyring.1)
+            }
+        }
+    }
+    
+    func testDMSPGPEncryptWithSign() {
+        measure {
+            DMSGopenPGPTests.testKeyRings.forEach { keyring in
+                DMSGopenPGPTests.encryptWithSign(keyRing: keyring.0, passphrase: keyring.1)
+            }
+        }
+    }
+}
+
+extension DMSGopenPGPTests {
+    static func signClearText(keyRing: CryptoKeyRing) {
+        do {
+            let time = pgp.getUnixTime()
+            var error: NSError?
+            let message = "Clear Message"
+            let clearText = HelperSignCleartextMessage(keyRing, message, &error)
+            XCTAssertNil(error)
+            
+            let result = HelperVerifyCleartextMessage(keyRing, clearText, time, &error)
+            XCTAssertNil(error)
+            XCTAssertEqual(message, result)
+            
+            let plainMessage = CryptoNewPlainMessageFromString(clearText)
+            let detached = try keyRing.signDetached(plainMessage)
+            
+            try keyRing.verifyDetached(plainMessage, signature: detached, verifyTime: time)
+        } catch {
+            XCTAssertTrue(false, "Fail to sign clear text, error: \(error.localizedDescription)")
+        }
+    }
+    
+    static func encryptWithoutSign(keyRing: CryptoKeyRing, passphrase: String) {
+        var error: NSError?
+        let plaintext = "Secret message"
+        let armoredMessage = HelperEncryptMessageArmored(keyRing, plaintext, &error)
+        
+        let decrypted = HelperDecryptMessageArmored(keyRing, passphrase, armoredMessage, &error)
+        XCTAssertEqual(decrypted, plaintext)
+    }
+    
+    static func encryptWithSign(keyRing: CryptoKeyRing, passphrase: String) {
+        do {
+            let time = pgp.getUnixTime()
+            var error: NSError?
+            let message = "Secret Message"
+            let signEncMessage = HelperEncryptSignMessageArmored(keyRing, keyRing, passphrase, message, &error)
+            XCTAssertNil(error)
+            
+            let decrypted = HelperDecryptVerifyMessageArmored(keyRing, keyRing, passphrase, signEncMessage, &error)
+            
+            let testDec = HelperDecryptMessageArmored(keyRing, passphrase, signEncMessage, &error)
+            XCTAssertNil(error)
+            XCTAssertEqual(message, decrypted)
+            
+        } catch {
+            XCTAssertTrue(false, "Fail to sign clear text, error: \(error.localizedDescription)")
+        }
+    }
+}
+
+extension DMSGopenPGPTests {
+    static func generateKeyRing(name: String, email: String, passphrase: String) -> CryptoKeyRing? {
+        do {
+            var error: NSError?
+            let rsaKey = pgp.generateKey(name, email: email, passphrase: passphrase, keyType: "rsa", bits: 4096, error: &error)
+            let keyring = try pgp.buildKeyRingArmored(rsaKey)
+            try keyring.unlock(withPassphrase: passphrase)
+            return keyring
+        } catch {
+            return nil
+        }
+    }
 }
 
 private let DSAKey = """
 -----BEGIN PGP PRIVATE KEY BLOCK-----
+
 lQUBBFzPqbcRDACgyRa1EcTCWfY79HJq6CxYKgBTg1HB9CkgSVlXEK+UlEY3EVem
 0EfmgaTARH/hj64T83K9QjSsH59XSKw5Hey/TE1C6O5QwDpqVAtBs+vGezBWTejt
 Ep+YIg9ihwTvxL1tMA5XbUvqd1+F+X5IN5Aeg0g973NR5TiRdmsIRq2ATtfdgbFR
@@ -166,6 +294,7 @@ EoJHdlyouFGgiNj92kEvZOZa+po=
 =nBSC
 -----END PGP PRIVATE KEY BLOCK-----
 -----BEGIN PGP PUBLIC KEY BLOCK-----
+
 mQSuBFzPqbcRDACgyRa1EcTCWfY79HJq6CxYKgBTg1HB9CkgSVlXEK+UlEY3EVem
 0EfmgaTARH/hj64T83K9QjSsH59XSKw5Hey/TE1C6O5QwDpqVAtBs+vGezBWTejt
 Ep+YIg9ihwTvxL1tMA5XbUvqd1+F+X5IN5Aeg0g973NR5TiRdmsIRq2ATtfdgbFR

@@ -4,6 +4,8 @@ import (
 	"regexp"
 	"testing"
 
+	"github.com/DimensionDev/gopenpgp/crypto"
+
 	"github.com/stretchr/testify/assert"
 )
 
@@ -36,6 +38,32 @@ func TestSignClearText(t *testing.T) {
 	}
 
 	assert.Exactly(t, canonicalizeAndTrim(signedPlainText), verified)
+}
+
+func TestSignWithGenerateKey(t *testing.T) {
+	rsaKey, err := crypto.GetGopenPGP().GenerateKey("Alice", "Alice@gmail.com", "Alice", "rsa", 4096)
+	if err != nil {
+		t.Fatal("fail to generate key:", err)
+	}
+
+	keyRing, err := crypto.GetGopenPGP().BuildKeyRingArmored(rsaKey)
+	if err != nil {
+		t.Fatal("fail to generate key:", err)
+	}
+
+	keyRing.UnlockWithPassphrase("Alice")
+
+	signTime := crypto.GetGopenPGP().GetUnixTime()
+	message := "Clear Message"
+
+	// signEntity, err := keyRing.GetSigningEntity()
+	// armoredKey, err := signEntity.PrivateKey.GetArmored("", "")
+	armoredPubKey, err := keyRing.GetArmoredPublicKey()
+	armoredMessage, err := SignCleartextMessageArmored(rsaKey, "Alice", message)
+
+	// armoredPubKey, err := signEntity.PrimaryKey.GetArmored("", "")
+	result, err := VerifyCleartextMessageArmored(armoredPubKey, armoredMessage, signTime)
+	print(result)
 }
 
 func TestMessageCanonicalizeAndTrim(t *testing.T) {
