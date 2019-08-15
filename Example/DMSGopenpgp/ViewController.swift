@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import DMSOpenPGP
+import DMSGoPGP
 
 class ViewController: UIViewController {
 

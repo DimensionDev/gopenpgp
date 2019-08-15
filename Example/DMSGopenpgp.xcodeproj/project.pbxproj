@@ -44,7 +44,7 @@
 		607FACEA1AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		607FACEB1AFB9204008FA782 /* Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests.swift; sourceTree = "<group>"; };
 		81C63FB74416CC631BA4F091 /* Pods-DMSGopenpgp_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DMSGopenpgp_Example.release.xcconfig"; path = "Target Support Files/Pods-DMSGopenpgp_Example/Pods-DMSGopenpgp_Example.release.xcconfig"; sourceTree = "<group>"; };
-		9F20CA094D155DF60833CA6A /* DMSGopenpgp.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = DMSGopenpgp.podspec; path = ../DMSGopenpgp.podspec; sourceTree = "<group>"; };
+		9F20CA094D155DF60833CA6A /* DMSGopenpgp.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = DMSGopenpgp.podspec; path = ../DMSGopenpgp.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		B3868F5EC4C282EC5F59F763 /* Pods-DMSGopenpgp_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DMSGopenpgp_Tests.debug.xcconfig"; path = "Target Support Files/Pods-DMSGopenpgp_Tests/Pods-DMSGopenpgp_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		B52D6F2A4389251695113140 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		FDB8F166DC5BFC34BC071BAC /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
@@ -464,6 +464,7 @@
 				INFOPLIST_FILE = DMSGopenpgp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
+				OTHER_LDFLAGS = "${inherited}";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
@@ -479,6 +480,7 @@
 				INFOPLIST_FILE = DMSGopenpgp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
+				OTHER_LDFLAGS = "${inherited}";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;

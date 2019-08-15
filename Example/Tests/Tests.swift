@@ -1,5 +1,5 @@
 import XCTest
-import DMSOpenPGP
+import DMSGoPGP
 
 class DMSGopenPGPTests: XCTestCase {
     

@@ -1,0 +1,14 @@
+framework module "DMSGoPGP" {
+	header "ref.h"
+    header "DMSGoPGP.objc.h"
+    header "Crypto.objc.h"
+    header "Helper.objc.h"
+    header "Armor.objc.h"
+    header "Constants.objc.h"
+    header "Models.objc.h"
+    header "Subtle.objc.h"
+    header "Universe.objc.h"
+    header "DMSGoPGP.h"
+
+    export *
+}

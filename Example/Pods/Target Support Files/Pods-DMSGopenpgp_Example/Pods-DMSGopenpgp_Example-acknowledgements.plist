@@ -39,7 +39,7 @@ IN THE SOFTWARE.
 			<key>License</key>
 			<string>AGPL</string>
 			<key>Title</key>
-			<string>DMSGopenpgp</string>
+			<string>DMSGoPGP</string>
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
 		</dict>

@@ -1,6 +1,0 @@
-framework module DMSGopenpgp {
-  umbrella header "DMSGopenpgp-umbrella.h"
-
-  export *
-  module * { export * }
-}

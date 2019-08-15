@@ -1,16 +1,16 @@
 PODS:
-  - DMSGopenpgp (0.0.1)
+  - DMSGoPGP (0.0.4)
 
 DEPENDENCIES:
-  - DMSGopenpgp (from `../`)
+  - DMSGoPGP (from `../`)
 
 EXTERNAL SOURCES:
-  DMSGopenpgp:
+  DMSGoPGP:
     :path: "../"
 
 SPEC CHECKSUMS:
-  DMSGopenpgp: 5fdf331208d5a1952b2d7af49754f31b706faf7e
+  DMSGoPGP: 8f358c9285dda0bada69144af319eaca8f8652ea
 
-PODFILE CHECKSUM: e0c99d21d05231a88c873a2eefc455ec2466604f
+PODFILE CHECKSUM: 691df42be9945de27fe9d97e2bdf6a68f2734224
 
-COCOAPODS: 1.7.2
+COCOAPODS: 1.7.5
