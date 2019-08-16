@@ -116,10 +116,6 @@ It is a struct that keeps track of time skew between server and client.
  */
 - (CryptoKeyRing* _Nullable)buildKeyRingArmored:(NSString* _Nullable)key error:(NSError* _Nullable* _Nullable)error;
 /**
- * BuildKeyRingNoError does not return error on fail
- */
-- (CryptoKeyRing* _Nullable)buildKeyRingNoError:(NSData* _Nullable)binKeys;
-/**
  * GenerateKey generates a key of the given keyType ("rsa" or "x25519").
 If keyType is "rsa", bits is the RSA bitsize of the key.
 If keyType is "x25519" bits is unused.
@@ -211,7 +207,6 @@ re-encrypts it with newPassphrase, and returns the new armored key.
 - (nonnull instancetype)init;
 // skipped field KeyRing.Entities with unsupported type: []*github.com/DimensionDev/gopenpgp/crypto.KeyEntity
 
-@property (nonatomic) NSString* _Nonnull firstKeyID;
 /**
  * CheckPassphrase checks if private key passphrase is correct for every sub key.
  */
@@ -245,6 +240,7 @@ privateKey : (optional) an unlocked private keyring to include signature in the 
 publicKey and returns a binary public-key encrypted session key packet.
  */
 - (NSData* _Nullable)encryptSessionKey:(CryptoSymmetricKey* _Nullable)sessionSplit error:(NSError* _Nullable* _Nullable)error;
+- (NSString* _Nonnull)getArmored:(NSString* _Nullable)passphrase error:(NSError* _Nullable* _Nullable)error;
 /**
  * GetArmoredPublicKey returns the armored public keys from this keyring.
  */
@@ -270,10 +266,6 @@ publicKey and returns a binary public-key encrypted session key packet.
 
 - (CryptoAttachmentProcessor* _Nullable)newLowMemoryAttachmentProcessor:(long)estimatedSize fileName:(NSString* _Nullable)fileName error:(NSError* _Nullable* _Nullable)error;
 /**
- * ReadFromJSON reads multiple keys from a json array and fills the keyring
- */
-- (BOOL)readFromJSON:(NSData* _Nullable)jsonData error:(NSError* _Nullable* _Nullable)error;
-/**
  * SignDetached generates and returns a PGPSignature for a given PlainMessage
  */
 - (CryptoPGPSignature* _Nullable)signDetached:(CryptoPlainMessage* _Nullable)message error:(NSError* _Nullable* _Nullable)error;
@@ -285,12 +277,6 @@ If err != nil, the password is wrong for every key, and err is the last error
 encountered.
  */
 - (BOOL)unlock:(NSData* _Nullable)passphrase error:(NSError* _Nullable* _Nullable)error;
-/**
- * UnlockJSONKeyRing reads keys from a JSON array, creates a newKeyRing,
-then tries to unlock them with the provided keyRing using the token in the structure.
-If the token is not available it will fall back to just reading the keys, and leave them locked.
- */
-- (CryptoKeyRing* _Nullable)unlockJSONKeyRing:(NSData* _Nullable)jsonData error:(NSError* _Nullable* _Nullable)error;
 /**
  * UnlockWithPassphrase is a wrapper for Unlock that uses strings
  */

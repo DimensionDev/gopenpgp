@@ -167,38 +167,82 @@ func TestKeyIds(t *testing.T) {
 	assert.Exactly(t, assertKeyIDs, keyIDs)
 }
 
-func TestReadFromJson(t *testing.T) {
-	decodedKeyRing := &KeyRing{}
-	err = decodedKeyRing.ReadFromJSON([]byte(readTestFile("keyring_jsonKeys", false)))
+// func TestReadFromJson(t *testing.T) {
+// 	decodedKeyRing := &KeyRing{}
+// 	err = decodedKeyRing.ReadFromJSON([]byte(readTestFile("keyring_jsonKeys", false)))
+// 	if err != nil {
+// 		t.Fatal("Expected no error while reading JSON, got:", err)
+// 	}
+
+// 	fingerprint, err := decodedKeyRing.GetFingerprint()
+// 	if err != nil {
+// 		t.Fatal("Expected no error while extracting fingerprint, got:", err)
+// 	}
+
+// 	assert.Exactly(t, "91eacacca6837890efa7000470e569d5c182bef6", fingerprint)
+// }
+
+// func TestUnlockJson(t *testing.T) {
+// 	userKeyRing, err := ReadArmoredKeyRing(strings.NewReader(readTestFile("keyring_userKey", false)))
+// 	if err != nil {
+// 		t.Fatal("Expected no error while creating keyring, got:", err)
+// 	}
+
+// 	err = userKeyRing.UnlockWithPassphrase("testpassphrase")
+// 	if err != nil {
+// 		t.Fatal("Expected no error while creating keyring, got:", err)
+// 	}
+
+// 	addressKeyRing, err := userKeyRing.UnlockJSONKeyRing([]byte(readTestFile("keyring_newJSONKeys", false)))
+// 	if err != nil {
+// 		t.Fatal("Expected no error while reading and decrypting JSON, got:", err)
+// 	}
+
+// 	for _, e := range addressKeyRing.Entities {
+// 		assert.Exactly(t, false, e.PrivateKey.PrivateKey.Encrypted)
+// 	}
+// }
+
+func TestSerializeAndRead(t *testing.T) {
+	rsaKey, err = pgp.GenerateKey(name, domain, passphrase, "rsa", 3072)
 	if err != nil {
-		t.Fatal("Expected no error while reading JSON, got:", err)
+		t.Fatal("Cannot generate RSA key:", err)
 	}
 
-	fingerprint, err := decodedKeyRing.GetFingerprint()
+	rsaKeyRing, err := pgp.BuildKeyRingArmored(rsaKey)
 	if err != nil {
-		t.Fatal("Expected no error while extracting fingerprint, got:", err)
+		t.Fatal("Cannot generate RSA key:", err)
 	}
 
-	assert.Exactly(t, "91eacacca6837890efa7000470e569d5c182bef6", fingerprint)
-}
+	rsaKeyRing.UnlockWithPassphrase(passphrase)
+	// testEntity := rsaKeyRing.getRawEntities()[0]
 
-func TestUnlockJson(t *testing.T) {
-	userKeyRing, err := ReadArmoredKeyRing(strings.NewReader(readTestFile("keyring_userKey", false)))
-	if err != nil {
-		t.Fatal("Expected no error while creating keyring, got:", err)
-	}
+	// w := bytes.NewBuffer(nil)
 
-	err = userKeyRing.UnlockWithPassphrase("testpassphrase")
-	if err != nil {
-		t.Fatal("Expected no error while creating keyring, got:", err)
-	}
+	// if err := testEntity.SelfSign(nil); err != nil {
+	// 	t.Fatal("Cannot generate RSA key:", err)
+	// }
 
-	addressKeyRing, err := userKeyRing.UnlockJSONKeyRing([]byte(readTestFile("keyring_newJSONKeys", false)))
-	if err != nil {
-		t.Fatal("Expected no error while reading and decrypting JSON, got:", err)
-	}
+	// rawPwd := []byte(passphrase)
+	// if testEntity.PrivateKey != nil && !testEntity.PrivateKey.Encrypted {
+	// 	if err := testEntity.PrivateKey.Encrypt(rawPwd); err != nil {
+	// 		t.Fatal("Cannot generate RSA key:", err)
+	// 	}
+	// }
 
-	for _, e := range addressKeyRing.Entities {
-		assert.Exactly(t, false, e.PrivateKey.PrivateKey.Encrypted)
-	}
+	// for _, sub := range testEntity.Subkeys {
+	// 	if sub.PrivateKey != nil && !sub.PrivateKey.Encrypted {
+	// 		if err := sub.PrivateKey.Encrypt(rawPwd); err != nil {
+	// 			t.Fatal("Cannot generate RSA key:", err)
+	// 		}
+	// 	}
+	// }
+
+	// testEntity.SerializePrivateNoSign(w, nil)
+	// serialized := w.Bytes()
+	// ppp, err := armorUtils.ArmorWithType(serialized, constants.PrivateKeyHeader)
+
+	ppp, err := rsaKeyRing.GetArmored(passphrase)
+
+	ioutil.WriteFile("prikey", []byte(ppp), 0777)
 }
