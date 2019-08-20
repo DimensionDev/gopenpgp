@@ -82,22 +82,12 @@ and returns the PGP-compliant special armoring
  */
 FOUNDATION_EXPORT NSString* _Nonnull HelperSignCleartextMessage(CryptoKeyRing* _Nullable keyRing, NSString* _Nullable text, NSError* _Nullable* _Nullable error);
 
-/**
- * SignCleartextMessageArmored signs text given a private key and its passphrase, canonicalizes and trims the newlines,
-and returns the PGP-compliant special armoring
- */
-FOUNDATION_EXPORT NSString* _Nonnull HelperSignCleartextMessageArmored(NSString* _Nullable privateKey, NSString* _Nullable passphrase, NSString* _Nullable text, NSError* _Nullable* _Nullable error);
+FOUNDATION_EXPORT NSString* _Nonnull HelperSignCleartextMessageArmored(CryptoKeyRing* _Nullable privateKeyRing, NSString* _Nullable passphrase, NSString* _Nullable text, NSError* _Nullable* _Nullable error);
 
 /**
  * VerifyCleartextMessage verifies PGP-compliant armored signed plain text given the public keyring
 and returns the text or err if the verification fails
  */
 FOUNDATION_EXPORT NSString* _Nonnull HelperVerifyCleartextMessage(CryptoKeyRing* _Nullable keyRing, NSString* _Nullable armored, int64_t verifyTime, NSError* _Nullable* _Nullable error);
-
-/**
- * VerifyCleartextMessageArmored verifies PGP-compliant armored signed plain text given the public key
-and returns the text or err if the verification fails
- */
-FOUNDATION_EXPORT NSString* _Nonnull HelperVerifyCleartextMessageArmored(NSString* _Nullable publicKey, NSString* _Nullable armored, int64_t verifyTime, NSError* _Nullable* _Nullable error);
 
 #endif
