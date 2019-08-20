@@ -16,8 +16,12 @@ var signedMessageTest = regexp.MustCompile(
 
 func TestSignClearText(t *testing.T) {
 	// Password defined in base_test
+	privateKeyRing, err := crypto.GetGopenPGP().BuildKeyRingArmored(readTestFile("keyring_privateKey", false))
+	if err != nil {
+		t.Fatal("fail to generate key:", err)
+	}
 	armored, err := SignCleartextMessageArmored(
-		readTestFile("keyring_privateKey", false),
+		privateKeyRing,
 		testMailboxPassword,
 		signedPlainText,
 	)
@@ -28,8 +32,12 @@ func TestSignClearText(t *testing.T) {
 
 	assert.Regexp(t, signedMessageTest, armored)
 
-	verified, err := VerifyCleartextMessageArmored(
-		readTestFile("keyring_publicKey", false),
+	publicKeyRing, err := crypto.GetGopenPGP().BuildKeyRingArmored(readTestFile("keyring_publicKey", false))
+	if err != nil {
+		t.Fatal("fail to generate key:", err)
+	}
+	verified, err := VerifyCleartextMessage(
+		publicKeyRing,
 		armored,
 		pgp.GetUnixTime(),
 	)
@@ -58,11 +66,11 @@ func TestSignWithGenerateKey(t *testing.T) {
 
 	// signEntity, err := keyRing.GetSigningEntity()
 	// armoredKey, err := signEntity.PrivateKey.GetArmored("", "")
-	armoredPubKey, err := keyRing.GetArmoredPublicKey()
-	armoredMessage, err := SignCleartextMessageArmored(rsaKey, "Alice", message)
+	// armoredPubKey, err := keyRing.GetArmoredPublicKey()
+	armoredMessage, err := SignCleartextMessageArmored(keyRing, "Alice", message)
 
 	// armoredPubKey, err := signEntity.PrimaryKey.GetArmored("", "")
-	result, err := VerifyCleartextMessageArmored(armoredPubKey, armoredMessage, signTime)
+	result, err := VerifyCleartextMessage(keyRing, armoredMessage, signTime)
 	print(result)
 }
 
