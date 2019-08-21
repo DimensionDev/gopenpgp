@@ -77,14 +77,14 @@ func (md *MessageDetail) GetEncryptedToKeyId(index int) (string, error) {
 func newMessageDetailFromCyptoMsgDetail(messageDetails *openpgp.MessageDetails) *MessageDetail {
 	var encryptedKeyIDs []string
 	for _, v := range messageDetails.EncryptedToKeyIds {
-		encryptedKeyIDs = append(encryptedKeyIDs, strconv.FormatUint(v, 10))
+		encryptedKeyIDs = append(encryptedKeyIDs, strconv.FormatUint(v, 16))
 	}
 	return &MessageDetail{
 		IsEncrypted:              messageDetails.IsEncrypted,
 		EncryptedToKeyIds:        encryptedKeyIDs,
 		IsSymmetricallyEncrypted: messageDetails.IsSymmetricallyEncrypted,
 		IsSigned:                 messageDetails.IsSigned,
-		SignedByKeyId:            strconv.FormatUint(messageDetails.SignedByKeyId, 10),
+		SignedByKeyId:            strconv.FormatUint(messageDetails.SignedByKeyId, 16),
 	}
 }
 
