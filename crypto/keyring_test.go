@@ -1,7 +1,6 @@
 package crypto
 
 import (
-	"bytes"
 	"encoding/base64"
 	"io/ioutil"
 	"strings"
@@ -9,7 +8,6 @@ import (
 
 	"golang.org/x/crypto/openpgp/armor"
 
-	armorUtils "github.com/DimensionDev/gopenpgp/armor"
 	"github.com/DimensionDev/gopenpgp/constants"
 	"github.com/stretchr/testify/assert"
 )
@@ -204,52 +202,3 @@ func TestKeyIds(t *testing.T) {
 // 		assert.Exactly(t, false, e.PrivateKey.PrivateKey.Encrypted)
 // 	}
 // }
-
-func TestSerializeAndRead(t *testing.T) {
-	// rsaKey, err = pgp.GenerateKey(name, domain, passphrase, "rsa", 3072)
-	// if err != nil {
-	// 	t.Fatal("Cannot generate RSA key:", err)
-	// }
-
-	rsaKeyRing, err := ReadArmoredKeyRing(strings.NewReader(readTestFile("prikey", false)))
-	if err != nil {
-		panic(err)
-	}
-
-	// rsaKeyRing, err := pgp.BuildKeyRingArmored(rsaKey)
-	// if err != nil {
-	// 	t.Fatal("Cannot generate RSA key:", err)
-	// }
-
-	rsaKeyRing.UnlockWithPassphrase(passphrase)
-	testEntity := rsaKeyRing.getRawEntities()[0]
-
-	w := bytes.NewBuffer(nil)
-
-	if err := testEntity.SelfSign(nil); err != nil {
-		t.Fatal("Cannot generate RSA key:", err)
-	}
-
-	// rawPwd := []byte(passphrase)
-	// if testEntity.PrivateKey != nil && !testEntity.PrivateKey.Encrypted {
-	// 	if err := testEntity.PrivateKey.Encrypt(rawPwd); err != nil {
-	// 		t.Fatal("Cannot generate RSA key:", err)
-	// 	}
-	// }
-
-	// for _, sub := range testEntity.Subkeys {
-	// 	if sub.PrivateKey != nil && !sub.PrivateKey.Encrypted {
-	// 		if err := sub.PrivateKey.Encrypt(rawPwd); err != nil {
-	// 			t.Fatal("Cannot generate RSA key:", err)
-	// 		}
-	// 	}
-	// }
-
-	testEntity.SerializePrivateNoSign(w, nil)
-	serialized := w.Bytes()
-	ppp, err := armorUtils.ArmorWithType(serialized, constants.PrivateKeyHeader)
-
-	// ppp, err := rsaKeyRing.GetArmored(passphrase)
-
-	ioutil.WriteFile("prikey", []byte(ppp), 0777)
-}
