@@ -475,7 +475,7 @@ ready for encryption, signature, or verification from an unencrypted string.
 - (long)getCreationTimestamp;
 - (BOOL)getEncrypted;
 - (NSString* _Nonnull)getFingerprint;
-- (long)getKeyId;
+- (NSString* _Nonnull)getKeyId;
 - (NSString* _Nonnull)keyIdShortString;
 - (NSString* _Nonnull)keyIdString;
 // skipped method PrivateKey.Serialize with unsupported parameter or return types
@@ -502,7 +502,7 @@ ready for encryption, signature, or verification from an unencrypted string.
 - (BOOL)getBitLength:(long* _Nullable)ret0_ error:(NSError* _Nullable* _Nullable)error;
 - (long)getCreationTimestamp;
 - (NSString* _Nonnull)getFingerprint;
-- (long)getKeyId;
+- (NSString* _Nonnull)getKeyId;
 // skipped method PublicKey.KeyExpired with unsupported parameter or return types
 
 /**

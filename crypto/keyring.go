@@ -513,7 +513,7 @@ func (pgp *GopenPGP) BuildKeyRingArmored(key string) (keyRing *KeyRing, err erro
 func (keyRing *KeyRing) KeyIds() []int {
 	var res []int
 	for _, e := range keyRing.Entities {
-		res = append(res, e.PrimaryKey.GetKeyId())
+		res = append(res, int(e.PrimaryKey.PublicKey.KeyId))
 	}
 	return res
 }
