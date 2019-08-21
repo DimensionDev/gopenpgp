@@ -14,6 +14,7 @@ import (
 	"github.com/DimensionDev/gopenpgp/constants"
 	"github.com/DimensionDev/gopenpgp/internal"
 
+	"golang.org/x/crypto/openpgp"
 	"golang.org/x/crypto/openpgp/clearsign"
 	"golang.org/x/crypto/openpgp/packet"
 )
@@ -51,6 +52,39 @@ type PGPSplitMessage struct {
 type ClearTextMessage struct {
 	Data         []byte
 	rawSignature []byte
+}
+
+type MessageDetail struct {
+	IsEncrypted              bool  // true if the message was encrypted.
+	EncryptedToKeyIds        []int // the list of recipient key ids.
+	IsSymmetricallyEncrypted bool  // true if a passphrase could have decrypted the message.
+	IsSigned                 bool  // true if the message is signed.
+	SignedByKeyId            int   // the key id of the signer, if any.
+}
+
+func (md *MessageDetail) GetEncryptedToKeyIdsCount() int {
+	return len(md.EncryptedToKeyIds)
+}
+
+func (md *MessageDetail) GetEncryptedToKeyId(index int) (int, error) {
+	if index >= md.GetEncryptedToKeyIdsCount() {
+		return -1, errors.New("openpgp: index out of range")
+	}
+	return md.EncryptedToKeyIds[index], nil
+}
+
+func newMessageDetailFromCyptoMsgDetail(messageDetails *openpgp.MessageDetails) *MessageDetail {
+	var encryptedKeyIDs []int
+	for _, v := range messageDetails.EncryptedToKeyIds {
+		encryptedKeyIDs = append(encryptedKeyIDs, int(v))
+	}
+	return &MessageDetail{
+		IsEncrypted:              messageDetails.IsEncrypted,
+		EncryptedToKeyIds:        encryptedKeyIDs,
+		IsSymmetricallyEncrypted: messageDetails.IsSymmetricallyEncrypted,
+		IsSigned:                 messageDetails.IsSigned,
+		SignedByKeyId:            int(messageDetails.SignedByKeyId),
+	}
 }
 
 // ---- GENERATORS -----
@@ -349,6 +383,34 @@ func (msg *ClearTextMessage) GetArmored() (string, error) {
 	str += armSignature
 
 	return str, nil
+}
+
+func (msg *PlainMessage) GetMessageDetails(keyRing *KeyRing) (*MessageDetail, error) {
+	config := &packet.Config{Time: pgp.getTimeGenerator()}
+	messageDetails, err := openpgp.ReadMessage(msg.NewReader(), KeyEntityList(keyRing.GetEntities()), nil, config)
+	if err != nil {
+		return nil, err
+	}
+	return newMessageDetailFromCyptoMsgDetail(messageDetails), nil
+}
+
+func (msg *PGPMessage) GetMessageDetails(keyRing *KeyRing) (*MessageDetail, error) {
+	config := &packet.Config{Time: pgp.getTimeGenerator()}
+	messageDetails, err := openpgp.ReadMessage(msg.NewReader(), KeyEntityList(keyRing.GetEntities()), nil, config)
+	if err != nil {
+		return nil, err
+	}
+	return newMessageDetailFromCyptoMsgDetail(messageDetails), nil
+}
+
+func (msg *ClearTextMessage) GetMessageDetails(keyRing *KeyRing) (*MessageDetail, error) {
+	reader := bytes.NewReader(msg.GetBinary())
+	config := &packet.Config{Time: pgp.getTimeGenerator()}
+	messageDetails, err := openpgp.ReadMessage(reader, KeyEntityList(keyRing.GetEntities()), nil, config)
+	if err != nil {
+		return nil, err
+	}
+	return newMessageDetailFromCyptoMsgDetail(messageDetails), nil
 }
 
 // ---- UTILS -----

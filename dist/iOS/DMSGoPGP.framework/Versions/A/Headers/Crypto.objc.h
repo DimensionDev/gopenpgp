@@ -19,6 +19,7 @@
 @class CryptoIdentity;
 @class CryptoKeyEntity;
 @class CryptoKeyRing;
+@class CryptoMessageDetail;
 @class CryptoPGPMessage;
 @class CryptoPGPSignature;
 @class CryptoPGPSplitMessage;
@@ -87,6 +88,7 @@
  * GetBinary returns the unarmored signed data as a []byte
  */
 - (NSData* _Nullable)getBinary;
+- (CryptoMessageDetail* _Nullable)getMessageDetails:(CryptoKeyRing* _Nullable)keyRing error:(NSError* _Nullable* _Nullable)error;
 /**
  * GetSignature returns the unarmored binary signature as a []byte
  */
@@ -292,6 +294,22 @@ and returns a SignatureVerificationError if fails
 
 @end
 
+@interface CryptoMessageDetail : NSObject <goSeqRefInterface> {
+}
+@property(strong, readonly) _Nonnull id _ref;
+
+- (nonnull instancetype)initWithRef:(_Nonnull id)ref;
+- (nonnull instancetype)init;
+@property (nonatomic) BOOL isEncrypted;
+// skipped field MessageDetail.EncryptedToKeyIds with unsupported type: []int
+
+@property (nonatomic) BOOL isSymmetricallyEncrypted;
+@property (nonatomic) BOOL isSigned;
+@property (nonatomic) long signedByKeyId;
+- (BOOL)getEncryptedToKeyId:(long)index ret0_:(long* _Nullable)ret0_ error:(NSError* _Nullable* _Nullable)error;
+- (long)getEncryptedToKeyIdsCount;
+@end
+
 /**
  * PGPMessage stores a PGP-encrypted message.
  */
@@ -320,6 +338,7 @@ and returns a SignatureVerificationError if fails
  * GetBinary returns the unarmored binary content of the message as a []byte
  */
 - (NSData* _Nullable)getBinary;
+- (CryptoMessageDetail* _Nullable)getMessageDetails:(CryptoKeyRing* _Nullable)keyRing error:(NSError* _Nullable* _Nullable)error;
 // skipped method PGPMessage.NewReader with unsupported parameter or return types
 
 /**
@@ -421,6 +440,7 @@ ready for encryption, signature, or verification from an unencrypted string.
  * GetBinary returns the binary content of the message as a []byte
  */
 - (NSData* _Nullable)getBinary;
+- (CryptoMessageDetail* _Nullable)getMessageDetails:(CryptoKeyRing* _Nullable)keyRing error:(NSError* _Nullable* _Nullable)error;
 /**
  * GetString returns the content of the message as a string
  */

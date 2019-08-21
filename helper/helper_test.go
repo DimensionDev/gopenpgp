@@ -82,6 +82,11 @@ func TestArmoredTextMessageEncryptionVerification(t *testing.T) {
 
 	assert.Exactly(t, true, pgp.IsPGPMessage(armored))
 
+	testMessage, err := crypto.NewPGPMessageFromArmored(armored)
+	//keyring_privateKey.UnlockWithPassphrase(testMailboxPassword)
+	detail, err := testMessage.GetMessageDetails(keyring_privateKey)
+	print(detail.EncryptedToKeyIds)
+
 	mime_publicKey, err := pgp.BuildKeyRingArmored(readTestFile("mime_publicKey", false))
 	if err != nil {
 		t.Fatal("Expected no error when encrypting, got:", err)

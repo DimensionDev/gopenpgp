@@ -10,7 +10,7 @@ import (
 
 func TestTextMessageEncryptionWithSymmetricKey(t *testing.T) {
 	var message = NewPlainMessageFromString("The secret code is... 1, 2, 3, 4, 5")
-
+	
 	// Encrypt data with password
 	encrypted, err := testSymmetricKey.Encrypt(message)
 	if err != nil {
@@ -25,6 +25,7 @@ func TestTextMessageEncryptionWithSymmetricKey(t *testing.T) {
 	if err != nil {
 		t.Fatal("Expected no error when decrypting, got:", err)
 	}
+
 	assert.Exactly(t, message.GetString(), decrypted.GetString())
 }
 
