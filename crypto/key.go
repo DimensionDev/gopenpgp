@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"io"
 	"math/big"
+	"strconv"
 	"strings"
 
 	"github.com/DimensionDev/gopenpgp/armor"
@@ -230,8 +231,8 @@ func (p *PublicKey) GetFingerprint() string {
 	return hex.EncodeToString(p.Fingerprint[:])
 }
 
-func (p *PublicKey) GetKeyId() int {
-	return int(p.KeyId)
+func (p *PublicKey) GetKeyId() string {
+	return strconv.FormatUint(p.KeyId, 16)
 }
 
 // KeyIdString returns the public key's fingerprint in capital hex
