@@ -9,6 +9,7 @@ import (
 	"io/ioutil"
 	"regexp"
 	"runtime"
+	"strconv"
 
 	"github.com/DimensionDev/gopenpgp/armor"
 	"github.com/DimensionDev/gopenpgp/constants"
@@ -55,35 +56,35 @@ type ClearTextMessage struct {
 }
 
 type MessageDetail struct {
-	IsEncrypted              bool  // true if the message was encrypted.
-	EncryptedToKeyIds        []int // the list of recipient key ids.
-	IsSymmetricallyEncrypted bool  // true if a passphrase could have decrypted the message.
-	IsSigned                 bool  // true if the message is signed.
-	SignedByKeyId            int   // the key id of the signer, if any.
+	IsEncrypted              bool     // true if the message was encrypted.
+	EncryptedToKeyIds        []string // the list of recipient key ids.
+	IsSymmetricallyEncrypted bool     // true if a passphrase could have decrypted the message.
+	IsSigned                 bool     // true if the message is signed.
+	SignedByKeyId            string   // the key id of the signer, if any.
 }
 
 func (md *MessageDetail) GetEncryptedToKeyIdsCount() int {
 	return len(md.EncryptedToKeyIds)
 }
 
-func (md *MessageDetail) GetEncryptedToKeyId(index int) (int, error) {
+func (md *MessageDetail) GetEncryptedToKeyId(index int) (string, error) {
 	if index >= md.GetEncryptedToKeyIdsCount() {
-		return -1, errors.New("openpgp: index out of range")
+		return "", errors.New("openpgp: index out of range")
 	}
 	return md.EncryptedToKeyIds[index], nil
 }
 
 func newMessageDetailFromCyptoMsgDetail(messageDetails *openpgp.MessageDetails) *MessageDetail {
-	var encryptedKeyIDs []int
+	var encryptedKeyIDs []string
 	for _, v := range messageDetails.EncryptedToKeyIds {
-		encryptedKeyIDs = append(encryptedKeyIDs, int(v))
+		encryptedKeyIDs = append(encryptedKeyIDs, strconv.FormatUint(v, 10))
 	}
 	return &MessageDetail{
 		IsEncrypted:              messageDetails.IsEncrypted,
 		EncryptedToKeyIds:        encryptedKeyIDs,
 		IsSymmetricallyEncrypted: messageDetails.IsSymmetricallyEncrypted,
 		IsSigned:                 messageDetails.IsSigned,
-		SignedByKeyId:            int(messageDetails.SignedByKeyId),
+		SignedByKeyId:            strconv.FormatUint(messageDetails.SignedByKeyId, 10),
 	}
 }
 

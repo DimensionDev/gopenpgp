@@ -301,12 +301,12 @@ and returns a SignatureVerificationError if fails
 - (nonnull instancetype)initWithRef:(_Nonnull id)ref;
 - (nonnull instancetype)init;
 @property (nonatomic) BOOL isEncrypted;
-// skipped field MessageDetail.EncryptedToKeyIds with unsupported type: []int
+// skipped field MessageDetail.EncryptedToKeyIds with unsupported type: []string
 
 @property (nonatomic) BOOL isSymmetricallyEncrypted;
 @property (nonatomic) BOOL isSigned;
-@property (nonatomic) long signedByKeyId;
-- (BOOL)getEncryptedToKeyId:(long)index ret0_:(long* _Nullable)ret0_ error:(NSError* _Nullable* _Nullable)error;
+@property (nonatomic) NSString* _Nonnull signedByKeyId;
+- (NSString* _Nonnull)getEncryptedToKeyId:(long)index error:(NSError* _Nullable* _Nullable)error;
 - (long)getEncryptedToKeyIdsCount;
 @end
 
