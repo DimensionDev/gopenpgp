@@ -1,11 +1,12 @@
-use_frameworks!
+platform :ios, '11.0'
 
-target 'DMSGopenpgp_Example' do
-  pod 'DMSGoPGP', :path => '../'
+target 'DMSGoPGP-Example' do
+  use_frameworks!
+  pod 'DMSGoPGP', :path => '../', :testspecs => ['Tests']
 
-  target 'DMSGopenpgp_Tests' do
+  target 'DMSGoPGP-ExampleTests' do
     inherit! :search_paths
 
-    
   end
+
 end

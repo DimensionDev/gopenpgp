@@ -14,8 +14,12 @@ Pod::Spec.new do |spec|
   spec.source       = { :git => "https://github.com/DimensionDev/gopenpgp.git", :tag => "#{spec.version}" }
 
   spec.header_dir = 'dist/iOS/DMSGoPGP.framework/Headers'
-  # spec.source_files  = "Classes", "Classes/**/*.{h,m}"
+  spec.source_files  = "DMSGoPGP/Classes/**/*"
   # spec.exclude_files = "Classes/Exclude"
+
+  spec.test_spec 'Tests' do |test_spec|
+    test_spec.source_files = 'DMSGoPGP/Tests/**/*'
+  end
 
   spec.ios.vendored_frameworks = 'dist/iOS/DMSGoPGP.framework'
   # spec.public_header_files = "Classes/**/*.h"
