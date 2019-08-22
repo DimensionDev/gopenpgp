@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -19,6 +19,10 @@
 		8914C1B99AD8416E7BA89967020B921E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2DFC47879929D4C8692026CA47D31345 /* Foundation.framework */; };
 		A11F9B1C160813672E9CFD81127C745B /* DMSGoPGP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 963078E94143FC1723376EE03E716D68 /* DMSGoPGP.swift */; };
 		A7F34F4985E771B11B3D9C37B1D699FA /* Pods-DMSGoPGP-ExampleTests-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 4DC6904164D38FE639BA028B7768F04A /* Pods-DMSGoPGP-ExampleTests-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DBCDC37D230E755400183FD7 /* DMSGoPGPTests+GenerateKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCDC37C230E755400183FD7 /* DMSGoPGPTests+GenerateKey.swift */; };
+		DBCDC37F230E761500183FD7 /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCDC37E230E761500183FD7 /* Helper.swift */; };
+		DBCDC381230E7A1800183FD7 /* DMSGoPGPTests+Password.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCDC380230E7A1800183FD7 /* DMSGoPGPTests+Password.swift */; };
+		DBCDC383230E7A5800183FD7 /* DMSGoPGP+PGP.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBCDC382230E7A5800183FD7 /* DMSGoPGP+PGP.swift */; };
 		DE0BDED8F1CD6E48A6F2C957373FBBAD /* DMSGoPGPTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD1C11B437191CD82B0028CC9B5FFD30 /* DMSGoPGPTests.swift */; };
 /* End PBXBuildFile section */
 
@@ -53,29 +57,29 @@
 		13DA3C07395DA4437A274B0E223F9699 /* DMSGoPGP-Unit-Tests-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "DMSGoPGP-Unit-Tests-frameworks.sh"; sourceTree = "<group>"; };
 		14599E32A201F3AA07655B6FDF817568 /* dist_iOS_DMSGoPGP_framework_Headers.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = dist_iOS_DMSGoPGP_framework_Headers.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		19B03C8DF6142D437D61EB231CCA9150 /* DMSGoPGP-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "DMSGoPGP-umbrella.h"; sourceTree = "<group>"; };
-		1AC394CC003FF9BBED06139FCDB38F70 /* Pods_DMSGoPGP_ExampleTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_DMSGoPGP_ExampleTests.framework; path = "Pods-DMSGoPGP-ExampleTests.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1AC394CC003FF9BBED06139FCDB38F70 /* Pods_DMSGoPGP_ExampleTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DMSGoPGP_ExampleTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1FD000024FB9D71B83C1628511530FFE /* Pods-DMSGoPGP-Example-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-DMSGoPGP-Example-acknowledgements.markdown"; sourceTree = "<group>"; };
 		2D1F51D726B440FC8E1335432B4AFC42 /* DMSGoPGP-Unit-Tests */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; name = "DMSGoPGP-Unit-Tests"; path = "DMSGoPGP-Unit-Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2DFC47879929D4C8692026CA47D31345 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS12.2.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
-		341AEA286699E9B4D9B7E1ABB082C18A /* dist_iOS_DMSGoPGP_framework_Headers.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = dist_iOS_DMSGoPGP_framework_Headers.framework; path = DMSGoPGP.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		341AEA286699E9B4D9B7E1ABB082C18A /* dist_iOS_DMSGoPGP_framework_Headers.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = dist_iOS_DMSGoPGP_framework_Headers.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3885F77298FFC0351B8C5C46FAC6E2D7 /* Pods-DMSGoPGP-Example-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-DMSGoPGP-Example-acknowledgements.plist"; sourceTree = "<group>"; };
-		425CCE637D5E7299519A6AC7F8C196AD /* README 2.md */ = {isa = PBXFileReference; includeInIndex = 1; path = "README 2.md"; sourceTree = "<group>"; };
+		425CCE637D5E7299519A6AC7F8C196AD /* README 2.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; path = "README 2.md"; sourceTree = "<group>"; };
 		4C7E8B511E9A295691D2813DEDB88A30 /* DMSGoPGP-Unit-Tests-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "DMSGoPGP-Unit-Tests-resources.sh"; sourceTree = "<group>"; };
 		4DB44AEB01CC458281F26B1CEBFA35C1 /* Pods-DMSGoPGP-ExampleTests-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-DMSGoPGP-ExampleTests-dummy.m"; sourceTree = "<group>"; };
 		4DC6904164D38FE639BA028B7768F04A /* Pods-DMSGoPGP-ExampleTests-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-DMSGoPGP-ExampleTests-umbrella.h"; sourceTree = "<group>"; };
 		57258E075CDA855A0DC2A707010AC6EF /* DMSGoPGP-Unit-Tests-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "DMSGoPGP-Unit-Tests-Info.plist"; sourceTree = "<group>"; };
 		5F5CBC09408CE67F4CE82ECC772D514B /* Pods-DMSGoPGP-ExampleTests-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-DMSGoPGP-ExampleTests-Info.plist"; sourceTree = "<group>"; };
-		7207FC5B5DE52BC6CB7A088CB33BC62F /* Pods_DMSGoPGP_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_DMSGoPGP_Example.framework; path = "Pods-DMSGoPGP-Example.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		7207FC5B5DE52BC6CB7A088CB33BC62F /* Pods_DMSGoPGP_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DMSGoPGP_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7295447D91D9DA58A1BFE465A7A00E0A /* Pods-DMSGoPGP-ExampleTests-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-DMSGoPGP-ExampleTests-acknowledgements.plist"; sourceTree = "<group>"; };
 		7C281A8E456EA12038B687F8587D0A5E /* DMSGoPGP-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "DMSGoPGP-dummy.m"; sourceTree = "<group>"; };
 		7C5B0A13506165DC318F574522FAC567 /* DMSGoPGP.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DMSGoPGP.framework; path = dist/iOS/DMSGoPGP.framework; sourceTree = "<group>"; };
 		81151257CD78AFC656044AA2A61B3DC8 /* Pods-DMSGoPGP-Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-DMSGoPGP-Example.release.xcconfig"; sourceTree = "<group>"; };
 		889FCECC5B8169312AA4AD09C1965035 /* Pods-DMSGoPGP-ExampleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-DMSGoPGP-ExampleTests.debug.xcconfig"; sourceTree = "<group>"; };
-		933123E205FA4B9836203FB60032F7C5 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; path = LICENSE; sourceTree = "<group>"; };
+		933123E205FA4B9836203FB60032F7C5 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		963078E94143FC1723376EE03E716D68 /* DMSGoPGP.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DMSGoPGP.swift; path = DMSGoPGP/Classes/DMSGoPGP.swift; sourceTree = "<group>"; };
-		98E5EA3EB63F01E459C01F9315E43CB7 /* DMSGoPGP.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; path = DMSGoPGP.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		98E5EA3EB63F01E459C01F9315E43CB7 /* DMSGoPGP.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; path = DMSGoPGP.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		9C0C79B29A2EBCD17A7141B821B5FDB5 /* DMSGoPGP-Unit-Tests-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "DMSGoPGP-Unit-Tests-prefix.pch"; sourceTree = "<group>"; };
-		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
+		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		A9C54CC5024CD9A38552E242295C40BE /* Pods-DMSGoPGP-Example-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-DMSGoPGP-Example-umbrella.h"; sourceTree = "<group>"; };
 		AE9CB2157A348664C4734DC0D86A9A94 /* DMSGoPGP-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "DMSGoPGP-prefix.pch"; sourceTree = "<group>"; };
 		B26921CBD18642418764DD113EF17AEF /* Pods-DMSGoPGP-Example.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-DMSGoPGP-Example.modulemap"; sourceTree = "<group>"; };
@@ -85,6 +89,10 @@
 		C786D46039AC3F531842A76ACBDF3FA1 /* Pods-DMSGoPGP-Example-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-DMSGoPGP-Example-dummy.m"; sourceTree = "<group>"; };
 		C8E9F55B4456112FA127337C4680D96E /* Pods-DMSGoPGP-ExampleTests.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = "Pods-DMSGoPGP-ExampleTests.modulemap"; sourceTree = "<group>"; };
 		D93DE0FD8467F4DEC4E0236E8E7A2248 /* DMSGoPGP.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = DMSGoPGP.modulemap; sourceTree = "<group>"; };
+		DBCDC37C230E755400183FD7 /* DMSGoPGPTests+GenerateKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "DMSGoPGPTests+GenerateKey.swift"; path = "DMSGoPGP/Tests/DMSGoPGPTests+GenerateKey.swift"; sourceTree = "<group>"; };
+		DBCDC37E230E761500183FD7 /* Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Helper.swift; path = DMSGoPGP/Tests/Helper.swift; sourceTree = "<group>"; };
+		DBCDC380230E7A1800183FD7 /* DMSGoPGPTests+Password.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "DMSGoPGPTests+Password.swift"; path = "DMSGoPGP/Tests/DMSGoPGPTests+Password.swift"; sourceTree = "<group>"; };
+		DBCDC382230E7A5800183FD7 /* DMSGoPGP+PGP.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "DMSGoPGP+PGP.swift"; path = "DMSGoPGP/Tests/DMSGoPGP+PGP.swift"; sourceTree = "<group>"; };
 		E059C5D9AD23D1816CE4A311CF6B1B89 /* Pods-DMSGoPGP-Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-DMSGoPGP-Example.debug.xcconfig"; sourceTree = "<group>"; };
 		E6D697B916A939FBCD45322EFAD8EF28 /* DMSGoPGP-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "DMSGoPGP-Info.plist"; sourceTree = "<group>"; };
 		FD1C11B437191CD82B0028CC9B5FFD30 /* DMSGoPGPTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DMSGoPGPTests.swift; path = DMSGoPGP/Tests/DMSGoPGPTests.swift; sourceTree = "<group>"; };
@@ -270,6 +278,10 @@
 			isa = PBXGroup;
 			children = (
 				FD1C11B437191CD82B0028CC9B5FFD30 /* DMSGoPGPTests.swift */,
+				DBCDC382230E7A5800183FD7 /* DMSGoPGP+PGP.swift */,
+				DBCDC380230E7A1800183FD7 /* DMSGoPGPTests+Password.swift */,
+				DBCDC37C230E755400183FD7 /* DMSGoPGPTests+GenerateKey.swift */,
+				DBCDC37E230E761500183FD7 /* Helper.swift */,
 			);
 			name = Tests;
 			sourceTree = "<group>";
@@ -489,6 +501,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				DE0BDED8F1CD6E48A6F2C957373FBBAD /* DMSGoPGPTests.swift in Sources */,
+				DBCDC381230E7A1800183FD7 /* DMSGoPGPTests+Password.swift in Sources */,
+				DBCDC37D230E755400183FD7 /* DMSGoPGPTests+GenerateKey.swift in Sources */,
+				DBCDC37F230E761500183FD7 /* Helper.swift in Sources */,
+				DBCDC383230E7A5800183FD7 /* DMSGoPGP+PGP.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

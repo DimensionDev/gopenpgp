@@ -6,6 +6,7 @@
 //
 
 import XCTest
+import DMSGoPGP
 
 class DMSGoPGPTests: XCTestCase {
 
@@ -14,3 +15,4 @@ class DMSGoPGPTests: XCTestCase {
     }
 
 }
+
