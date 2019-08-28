@@ -11,9 +11,9 @@ import DMSGoPGP
 class DMSGoPGPTests_GenerateKey: XCTestCase {
 
     func testGenerateKeys() {
-        for keyType in GenerateKeyInfo.KeyType.allCases {
+        for keyType in KeyInfo.KeyType.allCases {
             do {
-                try DMSGoPGPTests_GenerateKey.privateKey(name: keyType.rawValue, for: keyType)
+                _ = try DMSGoPGPTests_GenerateKey.keyInfo(for: keyType.rawValue, keyType: keyType).createPrivateKeyRing()
             } catch {
                 XCTFail(error.localizedDescription)
             }
@@ -26,7 +26,7 @@ class DMSGoPGPTests_GenerateKey: XCTestCase {
 
         measure {
             do {
-                _ = try keyInfo.generatePrivateKey()
+                _ = try keyInfo.createPrivateKeyRing()
             } catch {
                 XCTFail(error.localizedDescription)
             }
@@ -39,7 +39,7 @@ class DMSGoPGPTests_GenerateKey: XCTestCase {
 
         measure {
             do {
-                _ = try keyInfo.generatePrivateKey()
+                _ = try keyInfo.createPrivateKeyRing()
             } catch {
                 XCTFail(error.localizedDescription)
             }
@@ -50,19 +50,10 @@ class DMSGoPGPTests_GenerateKey: XCTestCase {
 
 extension DMSGoPGPTests_GenerateKey {
 
-    @discardableResult
-    static func privateKey(name: String, for keyType: GenerateKeyInfo.KeyType) throws -> String? {
-        let keyInfo = DMSGoPGPTests_GenerateKey.keyInfo(for: name, keyType: .rsa)
-        let key = try keyInfo.generatePrivateKey()
-        XCTAssertNotNil(key)
-        XCTAssertFalse(key!.isEmpty)
-        return key
-    }
-
-    static func keyInfo(for name: String, keyType: GenerateKeyInfo.KeyType) -> GenerateKeyInfo {
+    static func keyInfo(for name: String, keyType: KeyInfo.KeyType) -> KeyInfo {
         let email = "\(name)@\(name).com"
         let passphrase = name
 
-        return GenerateKeyInfo(name: name, email: email, passphrase: passphrase, keyType: keyType, keyBits: keyType.defaultBits)
+        return KeyInfo(name: name, email: email, passphrase: passphrase, keyType: keyType, keyBits: keyType.defaultBits)
     }
 }

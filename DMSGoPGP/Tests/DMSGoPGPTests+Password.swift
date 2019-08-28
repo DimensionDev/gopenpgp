@@ -46,7 +46,7 @@ class DMSGoPGPTests_Password: XCTestCase {
         let encrypted_AES256 = try? key!.encrypt(cryptoMessage)
         XCTAssertNotNil(encrypted_AES256)
 
-        let decrypted_AES256 = try? key!.decrypt(encrypted_AES256)  // should be: decrypted, err := key.Decrypt(password, encrypted)
+        let decrypted_AES256 = try? key!.decrypt(encrypted_AES256)  // FIXME: should be: decrypted, err := key.Decrypt(password, encrypted)
         XCTAssertNotNil(decrypted_AES256)
         XCTAssertNotNil(decrypted_AES256?.data)
         XCTAssertEqual(decrypted_AES256!.data, cryptoMessage!.data)

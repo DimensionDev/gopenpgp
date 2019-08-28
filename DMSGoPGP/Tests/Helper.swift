@@ -8,17 +8,15 @@
 import Foundation
 import DMSGoPGP
 
-public struct GenerateKeyInfo {
+public struct KeyInfo {
     public let name: String
     public let email: String
     public let passphrase: String
     public let keyType: KeyType
     public let keyBits: Int
-
-
 }
 
-extension GenerateKeyInfo {
+extension KeyInfo {
 
     public enum KeyType: String, CaseIterable {
         case rsa
@@ -34,9 +32,9 @@ extension GenerateKeyInfo {
 
 }
 
-extension GenerateKeyInfo {
+extension KeyInfo {
 
-    public func generatePrivateKey() throws -> String? {
+    private func _createPrivateKey() throws -> String? {
         let pgp = CryptoGetGopenPGP()
 
         var error: NSError?
@@ -48,13 +46,46 @@ extension GenerateKeyInfo {
         return key
     }
 
-    public func generateKeyRing() throws -> CryptoKeyRing? {
+    public func createPrivateKeyRing() throws -> CryptoKeyRing? {
         let pgp = CryptoGetGopenPGP()
 
-        let privateKey = try generatePrivateKey()
-        let keyRing = try pgp?.buildKeyRingArmored(privateKey ?? "")
+        let armored = try _createPrivateKey()
+        let keyRing = try pgp?.buildKeyRingArmored(armored ?? "")
 
         return keyRing
     }
 
+}
+
+extension CryptoKeyRing {
+
+    public func publicKeyRing() throws -> CryptoKeyRing? {
+        let pgp = CryptoGetGopenPGP()
+
+        var error: NSError?
+        let publicKey = getArmoredPublicKey(&error)
+        return try pgp?.buildKeyRingArmored(publicKey)
+    }
+
+}
+
+extension CryptoKeyRing {
+    public func armored(passphrase: String? = nil) throws -> String {
+        var error: NSError?
+        if let passphrase = passphrase {
+            let armored = getArmored(passphrase, error: &error)
+            if let error = error {
+                throw error
+            }
+
+            return armored
+        } else {
+            let armored = getArmoredPublicKey(&error)
+            if let error = error {
+                throw error
+            }
+
+            return armored
+        }
+    }
 }
