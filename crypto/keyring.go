@@ -400,6 +400,13 @@ func (pgp *GopenPGP) BuildKeyRingArmored(key string) (keyRing *KeyRing, err erro
 	return &KeyRing{Entities: keyEntities}, err
 }
 
+func (pgp *GopenPGP) CombineKeyRing(keyRing1, keyRing2 *KeyRing) *KeyRing {
+	var entities []*KeyEntity
+	entities = append(entities, keyRing1.Entities...)
+	entities = append(entities, keyRing2.Entities...)
+	return &KeyRing{Entities: entities}
+}
+
 // ReadFromJSON reads multiple keys from a json array and fills the keyring
 // func (keyRing *KeyRing) ReadFromJSON(jsonData []byte) (err error) {
 // 	keyObjs, err := unmarshalJSON(jsonData)

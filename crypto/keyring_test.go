@@ -167,6 +167,13 @@ func TestKeyIds(t *testing.T) {
 	assert.Exactly(t, assertKeyIDs, keyIDs)
 }
 
+func TestCombineKeyRings(t *testing.T) {
+	entityCount1 := len(testPrivateKeyRing.Entities)
+	entityCount2 := len(testPublicKeyRing.Entities)
+	combinedKeyRing := pgp.CombineKeyRing(testPrivateKeyRing, testPublicKeyRing)
+	assert.Equal(t, len(combinedKeyRing.Entities), entityCount1+entityCount2)
+}
+
 // func TestReadFromJson(t *testing.T) {
 // 	decodedKeyRing := &KeyRing{}
 // 	err = decodedKeyRing.ReadFromJSON([]byte(readTestFile("keyring_jsonKeys", false)))

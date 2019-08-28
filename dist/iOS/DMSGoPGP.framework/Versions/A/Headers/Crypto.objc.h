@@ -117,6 +117,7 @@ It is a struct that keeps track of time skew between server and client.
  * BuildKeyRingArmored reads armored string and returns keyring
  */
 - (CryptoKeyRing* _Nullable)buildKeyRingArmored:(NSString* _Nullable)key error:(NSError* _Nullable* _Nullable)error;
+- (CryptoKeyRing* _Nullable)combineKeyRing:(CryptoKeyRing* _Nullable)keyRing1 keyRing2:(CryptoKeyRing* _Nullable)keyRing2;
 /**
  * GenerateKey generates a key of the given keyType ("rsa" or "x25519").
 If keyType is "rsa", bits is the RSA bitsize of the key.
