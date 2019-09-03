@@ -388,9 +388,16 @@ func (pgp *GopenPGP) BuildKeyRing(binKeys []byte) (keyRing *KeyRing, err error) 
 // 	return
 // }
 
+var privateKeyArmoredStart = "-----BEGIN PGP PRIVATE KEY BLOCK-----"
+
 // BuildKeyRingArmored reads armored string and returns keyring
 func (pgp *GopenPGP) BuildKeyRingArmored(key string) (keyRing *KeyRing, err error) {
-	keyRaw, err := armorUtils.Unarmor(key)
+	toDecodeArmor := key
+	privKeyIndex := strings.Index(toDecodeArmor, privateKeyArmoredStart)
+	if privKeyIndex >= 0 {
+		toDecodeArmor = toDecodeArmor[privKeyIndex:]
+	}
+	keyRaw, err := armorUtils.Unarmor(toDecodeArmor)
 	if err != nil {
 		return nil, err
 	}

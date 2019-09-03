@@ -61,7 +61,8 @@ func init() {
 
 func TestKeyRing_ArmoredPublicKeyString(t *testing.T) {
 
-	dmsPrivKeyRing, err := ReadArmoredKeyRing(strings.NewReader(readTestFile("dms_privKey", false)))
+	dmsPrivKeyRing, err := pgp.BuildKeyRingArmored(readTestFile("dms_privKey", false))
+	// dmsPrivKeyRing, err := ReadArmoredKeyRing(strings.NewReader(readTestFile("dms_privKey", false)))
 	privPubkey, err := dmsPrivKeyRing.GetArmoredPublicKey()
 	dmsPrivKeyRing.UnlockWithPassphrase("RSA")
 	print(privPubkey)

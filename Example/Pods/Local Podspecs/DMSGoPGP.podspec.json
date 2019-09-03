@@ -1,6 +1,6 @@
 {
   "name": "DMSGoPGP",
-  "version": "0.0.4",
+  "version": "0.0.11",
   "summary": "Mobile compatible OpenPGP library.",
   "description": "Mobile compatible OpenPGP library, modified by Dimension",
   "homepage": "https://github.com/DimensionDev/gopenpgp",
@@ -16,7 +16,7 @@
   },
   "source": {
     "git": "https://github.com/DimensionDev/gopenpgp.git",
-    "tag": "0.0.4"
+    "tag": "0.0.11"
   },
   "header_dir": "dist/iOS/DMSGoPGP.framework/Headers",
   "ios": {

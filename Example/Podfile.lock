@@ -1,5 +1,5 @@
 PODS:
-  - DMSGoPGP (0.0.4)
+  - DMSGoPGP (0.0.11)
 
 DEPENDENCIES:
   - DMSGoPGP (from `../`)
@@ -9,7 +9,7 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  DMSGoPGP: 8f358c9285dda0bada69144af319eaca8f8652ea
+  DMSGoPGP: 1e9d182b624bc4e05b9b3937afdd9afa65facb64
 
 PODFILE CHECKSUM: 691df42be9945de27fe9d97e2bdf6a68f2734224
 

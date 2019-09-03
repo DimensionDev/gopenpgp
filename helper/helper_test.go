@@ -177,3 +177,68 @@ func TestAttachmentEncryptionVerification(t *testing.T) {
 
 	assert.Exactly(t, attachment, decrypted)
 }
+
+func TestGetMessageDetail(t *testing.T) {
+	var plaintext = "Secret message"
+	var password = "123456"
+
+	dmsKeyPair, err := pgp.BuildKeyRingArmored(readTestFile("dms_keyPair", false))
+	if err != nil {
+		t.Fatal("Expected no error when encrypting, got:", err)
+	}
+	dmsKeyPair.UnlockWithPassphrase("")
+
+	brad_pubkeyring, err := pgp.BuildKeyRingArmored(readTestFile("brad_pubkey", false))
+	if err != nil {
+		t.Fatal("Expected no error when encrypting, got:", err)
+	}
+
+	brad_privkey, err := pgp.BuildKeyRingArmored(readTestFile("brad_privkey", false))
+	if err != nil {
+		t.Fatal("Expected no error when encrypting, got:", err)
+	}
+	brad_privkey.UnlockWithPassphrase(password)
+
+	test2_pubkey, err := pgp.BuildKeyRingArmored(readTestFile("test2_pubkey", false))
+	if err != nil {
+		t.Fatal("Expected no error when encrypting, got:", err)
+	}
+
+	test2_privkey, err := pgp.BuildKeyRingArmored(readTestFile("test2_privkey", false))
+	if err != nil {
+		t.Fatal("Expected no error when encrypting, got:", err)
+	}
+	test2_privkey.UnlockWithPassphrase(password)
+	armored, err := EncryptSignMessageArmored(
+		test2_pubkey,
+		brad_privkey,
+		password,
+		plaintext,
+	)
+	if err != nil {
+		t.Fatal("Expected no error when encrypting, got:", err)
+	}
+
+	assert.Exactly(t, true, pgp.IsPGPMessage(armored))
+
+	testMessage, err := crypto.NewPGPMessageFromArmored(armored)
+
+	detail, err := testMessage.GetMessageDetails(test2_privkey)
+	print(detail)
+
+	decrypted1, err := DecryptMessageArmored(test2_privkey, password, armored)
+	assert.Exactly(t, plaintext, decrypted1)
+
+	decrypted2, err := DecryptVerifyMessageArmored(
+		brad_pubkeyring,
+		test2_privkey,
+		password,
+		armored,
+	)
+
+	if err != nil {
+		t.Fatal("Expected no error when decrypting, got:", err)
+	}
+
+	assert.Exactly(t, plaintext, decrypted2)
+}
