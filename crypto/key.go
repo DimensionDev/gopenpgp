@@ -228,7 +228,7 @@ func (p *PublicKey) GetAlgorithm() int {
 }
 
 func (p *PublicKey) GetFingerprint() string {
-	return hex.EncodeToString(p.Fingerprint[:])
+	return strings.ToUpper(hex.EncodeToString(p.Fingerprint[:]))
 }
 
 func (p *PublicKey) GetKeyId() string {

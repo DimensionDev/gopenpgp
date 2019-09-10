@@ -10,6 +10,7 @@ import (
 	"regexp"
 	"runtime"
 	"strconv"
+	"strings"
 
 	"github.com/DimensionDev/gopenpgp/armor"
 	"github.com/DimensionDev/gopenpgp/constants"
@@ -77,14 +78,14 @@ func (md *MessageDetail) GetEncryptedToKeyId(index int) (string, error) {
 func newMessageDetailFromCyptoMsgDetail(messageDetails *openpgp.MessageDetails) *MessageDetail {
 	var encryptedKeyIDs []string
 	for _, v := range messageDetails.EncryptedToKeyIds {
-		encryptedKeyIDs = append(encryptedKeyIDs, strconv.FormatUint(v, 16))
+		encryptedKeyIDs = append(encryptedKeyIDs, strings.ToUpper(strconv.FormatUint(v, 16)))
 	}
 	return &MessageDetail{
 		IsEncrypted:              messageDetails.IsEncrypted,
 		EncryptedToKeyIds:        encryptedKeyIDs,
 		IsSymmetricallyEncrypted: messageDetails.IsSymmetricallyEncrypted,
 		IsSigned:                 messageDetails.IsSigned,
-		SignedByKeyId:            strconv.FormatUint(messageDetails.SignedByKeyId, 16),
+		SignedByKeyId:            strings.ToUpper(strconv.FormatUint(messageDetails.SignedByKeyId, 16)),
 	}
 }
 
