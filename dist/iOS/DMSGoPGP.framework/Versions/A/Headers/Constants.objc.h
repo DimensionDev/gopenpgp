@@ -24,17 +24,17 @@ FOUNDATION_EXPORT NSString* _Nonnull const ConstantsAES192;
  */
 FOUNDATION_EXPORT NSString* _Nonnull const ConstantsAES256;
 /**
- * Constants for armored data.
- */
-FOUNDATION_EXPORT NSString* _Nonnull const ConstantsArmorHeaderComment;
-/**
- * Constants for armored data.
- */
-FOUNDATION_EXPORT NSString* _Nonnull const ConstantsArmorHeaderVersion;
-/**
  * Cipher suite names.
  */
 FOUNDATION_EXPORT NSString* _Nonnull const ConstantsCAST5;
+/**
+ * Constants for armored data.
+ */
+FOUNDATION_EXPORT NSString* _Nonnull const ConstantsKeyArmorHeaderComment;
+/**
+ * Constants for armored data.
+ */
+FOUNDATION_EXPORT NSString* _Nonnull const ConstantsMessageArmorHeaderComment;
 /**
  * Constants for armored data.
  */

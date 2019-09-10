@@ -9,20 +9,6 @@ import (
 
 // SignCleartextMessageArmored signs text given a private key and its passphrase, canonicalizes and trims the newlines,
 // and returns the PGP-compliant special armoring
-// func SignCleartextMessageArmored(privateKey, passphrase, text string) (string, error) {
-// 	signingKeyRing, err := pgp.BuildKeyRingArmored(privateKey)
-// 	if err != nil {
-// 		return "", err
-// 	}
-
-// 	err = signingKeyRing.UnlockWithPassphrase(passphrase)
-// 	if err != nil {
-// 		return "", err
-// 	}
-
-// 	return SignCleartextMessage(signingKeyRing, text)
-// }
-
 func SignCleartextMessageArmored(privateKeyRing *crypto.KeyRing, passphrase, text string) (string, error) {
 	err := privateKeyRing.UnlockWithPassphrase(passphrase)
 	if err != nil {
@@ -31,17 +17,6 @@ func SignCleartextMessageArmored(privateKeyRing *crypto.KeyRing, passphrase, tex
 
 	return SignCleartextMessage(privateKeyRing, text)
 }
-
-// VerifyCleartextMessageArmored verifies PGP-compliant armored signed plain text given the public key
-// and returns the text or err if the verification fails
-// func VerifyCleartextMessageArmored(publicKey, armored string, verifyTime int64) (string, error) {
-// 	verifyKeyRing, err := pgp.BuildKeyRingArmored(publicKey)
-// 	if err != nil {
-// 		return "", err
-// 	}
-
-// 	return VerifyCleartextMessage(verifyKeyRing, armored, verifyTime)
-// }
 
 // SignCleartextMessage signs text given a private keyring, canonicalizes and trims the newlines,
 // and returns the PGP-compliant special armoring

@@ -27,8 +27,14 @@ func ArmorWithTypeBuffered(w io.Writer, armorType string) (io.WriteCloser, error
 // ArmorWithType armors input with the given armorType.
 func ArmorWithType(input []byte, armorType string) (string, error) {
 	var b bytes.Buffer
-
-	w, err := armor.Encode(&b, armorType, internal.ArmorHeaders)
+	var armorHeader map[string]string
+	switch armorType {
+	case constants.PublicKeyHeader, constants.PrivateKeyHeader:
+		armorHeader = internal.KeyArmorHeaders
+	default:
+		armorHeader = internal.MessageArmorHeaders
+	}
+	w, err := armor.Encode(&b, armorType, armorHeader)
 
 	if err != nil {
 		return "", err

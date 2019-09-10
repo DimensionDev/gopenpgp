@@ -27,8 +27,7 @@
 @end
 
 /**
- * 	return message.GetString(), nil
-}
+ * DecryptMessageArmored decrypts an armored PGP message given a private key and its passphrase
  */
 FOUNDATION_EXPORT NSString* _Nonnull HelperDecryptMessageArmored(CryptoKeyRing* _Nullable privateKeyRing, NSString* _Nullable passphrase, NSString* _Nullable ciphertext, NSError* _Nullable* _Nullable error);
 
@@ -46,11 +45,15 @@ Returns the plain data or an error on signature verification failure.
 FOUNDATION_EXPORT NSData* _Nullable HelperDecryptVerifyAttachment(CryptoKeyRing* _Nullable publicKeyRing, CryptoKeyRing* _Nullable privateKeyRing, NSString* _Nullable passphrase, NSData* _Nullable keyPacket, NSData* _Nullable dataPacket, NSString* _Nullable armoredSignature, NSError* _Nullable* _Nullable error);
 
 /**
- * 	return message.GetString(), nil
-}
+ * DecryptVerifyMessageArmored decrypts an armored PGP message given a private key and its passphrase
+and verifies the embedded signature.
+Returns the plain data or an error on signature verification failure.
  */
 FOUNDATION_EXPORT NSString* _Nonnull HelperDecryptVerifyMessageArmored(CryptoKeyRing* _Nullable publicKeyRing, CryptoKeyRing* _Nullable privateKeyRing, NSString* _Nullable passphrase, NSString* _Nullable ciphertext, NSError* _Nullable* _Nullable error);
 
+/**
+ * EncryptMessageArmored generates an armored PGP message given a plaintext and an armored public key
+ */
 FOUNDATION_EXPORT NSString* _Nonnull HelperEncryptMessageArmored(CryptoKeyRing* _Nullable publicKeyRing, NSString* _Nullable plaintext, NSError* _Nullable* _Nullable error);
 
 /**
@@ -71,8 +74,8 @@ Returns keypacket, dataPacket and unarmored (!) signature separate.
 FOUNDATION_EXPORT HelperEncryptedSignAttachment* _Nullable HelperEncryptSignAttachment(CryptoKeyRing* _Nullable publicKeyRing, CryptoKeyRing* _Nullable privateKeyRing, NSString* _Nullable passphrase, NSString* _Nullable fileName, NSData* _Nullable plainData, NSError* _Nullable* _Nullable error);
 
 /**
- * 	return ciphertext, nil
-}
+ * EncryptSignMessageArmored generates an armored signed PGP message given a plaintext and an armored public key
+a private key and its passphrase
  */
 FOUNDATION_EXPORT NSString* _Nonnull HelperEncryptSignMessageArmored(CryptoKeyRing* _Nullable publicKeyRing, CryptoKeyRing* _Nullable privateKeyRing, NSString* _Nullable passphrase, NSString* _Nullable plaintext, NSError* _Nullable* _Nullable error);
 
@@ -82,6 +85,10 @@ and returns the PGP-compliant special armoring
  */
 FOUNDATION_EXPORT NSString* _Nonnull HelperSignCleartextMessage(CryptoKeyRing* _Nullable keyRing, NSString* _Nullable text, NSError* _Nullable* _Nullable error);
 
+/**
+ * SignCleartextMessageArmored signs text given a private key and its passphrase, canonicalizes and trims the newlines,
+and returns the PGP-compliant special armoring
+ */
 FOUNDATION_EXPORT NSString* _Nonnull HelperSignCleartextMessageArmored(CryptoKeyRing* _Nullable privateKeyRing, NSString* _Nullable passphrase, NSString* _Nullable text, NSError* _Nullable* _Nullable error);
 
 /**
