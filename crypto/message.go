@@ -62,6 +62,7 @@ type MessageDetail struct {
 	IsSymmetricallyEncrypted bool     // true if a passphrase could have decrypted the message.
 	IsSigned                 bool     // true if the message is signed.
 	SignedByKeyId            string   // the key id of the signer, if any.
+	signedBy                 *openpgp.Key
 }
 
 func (md *MessageDetail) GetEncryptedToKeyIdsCount() int {
@@ -75,6 +76,15 @@ func (md *MessageDetail) GetEncryptedToKeyId(index int) (string, error) {
 	return md.EncryptedToKeyIds[index], nil
 }
 
+func (md *MessageDetail) GetSignedUserID() string {
+	if md.signedBy != nil && md.signedBy.Entity != nil && len(md.signedBy.Entity.Identities) > 0 {
+		for _, v := range md.signedBy.Entity.Identities {
+			return v.Name
+		}
+	}
+	return ""
+}
+
 func newMessageDetailFromCyptoMsgDetail(messageDetails *openpgp.MessageDetails) *MessageDetail {
 	var encryptedKeyIDs []string
 	for _, v := range messageDetails.EncryptedToKeyIds {
@@ -86,6 +96,7 @@ func newMessageDetailFromCyptoMsgDetail(messageDetails *openpgp.MessageDetails) 
 		IsSymmetricallyEncrypted: messageDetails.IsSymmetricallyEncrypted,
 		IsSigned:                 messageDetails.IsSigned,
 		SignedByKeyId:            strings.ToUpper(strconv.FormatUint(messageDetails.SignedByKeyId, 16)),
+		signedBy:                 messageDetails.SignedBy,
 	}
 }
 

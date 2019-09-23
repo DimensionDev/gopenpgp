@@ -198,6 +198,8 @@ re-encrypts it with newPassphrase, and returns the new armored key.
 
 - (CryptoIdentity* _Nullable)getIdentity:(long)index error:(NSError* _Nullable* _Nullable)error;
 - (long)getIdentityCount;
+- (CryptoSubkey* _Nullable)getSubkey:(long)index error:(NSError* _Nullable* _Nullable)error;
+- (long)getSubkeyCount;
 // skipped method KeyEntity.Serialize with unsupported parameter or return types
 
 @end
@@ -309,6 +311,7 @@ and returns a SignatureVerificationError if fails
 @property (nonatomic) NSString* _Nonnull signedByKeyId;
 - (NSString* _Nonnull)getEncryptedToKeyId:(long)index error:(NSError* _Nullable* _Nullable)error;
 - (long)getEncryptedToKeyIdsCount;
+- (NSString* _Nonnull)getSignedUserID;
 @end
 
 /**
@@ -466,7 +469,7 @@ ready for encryption, signature, or verification from an unencrypted string.
 - (nonnull instancetype)init;
 // skipped field PrivateKey.PublicKey with unsupported type: github.com/DimensionDev/gopenpgp/crypto.PublicKey
 
-// skipped field PrivateKey.PrivateKey with unsupported type: golang.org/x/crypto/openpgp/packet.PrivateKey
+// skipped field PrivateKey.PrivateKey with unsupported type: *golang.org/x/crypto/openpgp/packet.PrivateKey
 
 - (BOOL)decrypt:(NSData* _Nullable)passphrase error:(NSError* _Nullable* _Nullable)error;
 - (BOOL)encrypt:(NSData* _Nullable)passphrase error:(NSError* _Nullable* _Nullable)error;
@@ -594,8 +597,12 @@ in capital hex, as shown by gpg --list-keys (e.g. "621CC013").
 
 - (nonnull instancetype)initWithRef:(_Nonnull id)ref;
 - (nonnull instancetype)init;
-// skipped field Subkey.Subkey with unsupported type: golang.org/x/crypto/openpgp.Subkey
-
+/**
+ * openpgp.Subkey
+ */
+@property (nonatomic) CryptoPublicKey* _Nullable publicKey;
+@property (nonatomic) CryptoPrivateKey* _Nullable privateKey;
+@property (nonatomic) CryptoSignature* _Nullable sig;
 @end
 
 /**

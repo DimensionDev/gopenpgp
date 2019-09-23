@@ -10,7 +10,7 @@ import (
 
 func TestTextMessageEncryptionWithSymmetricKey(t *testing.T) {
 	var message = NewPlainMessageFromString("The secret code is... 1, 2, 3, 4, 5")
-	
+
 	// Encrypt data with password
 	encrypted, err := testSymmetricKey.Encrypt(message)
 	if err != nil {
@@ -128,4 +128,34 @@ func TestIssue11(t *testing.T) {
 	}
 
 	assert.Exactly(t, "message from sender", plainMessage.GetString())
+}
+
+func TestGetMessageDetails(t *testing.T) {
+	var message = NewPlainMessageFromString("plain text")
+
+	testPublicKeyRing, _ = ReadArmoredKeyRing(strings.NewReader(readTestFile("dms_pubkey", false)))
+	testPrivateKeyRing, err = ReadArmoredKeyRing(strings.NewReader(readTestFile("dms_privKey", false)))
+
+	// Password defined in keyring_test
+	err = testPrivateKeyRing.UnlockWithPassphrase("RSA")
+	if err != nil {
+		t.Fatal("Expected no error unlocking privateKey, got:", err)
+	}
+
+	ciphertext, err := testPublicKeyRing.Encrypt(message, testPrivateKeyRing)
+	if err != nil {
+		t.Fatal("Expected no error when encrypting, got:", err)
+	}
+
+	detail, err := ciphertext.GetMessageDetails(testPrivateKeyRing)
+	if err != nil {
+		t.Fatal("Expected no error when getting message detail, got:", err)
+	}
+	signedUserID := detail.GetSignedUserID()
+	assert.Exactly(t, "RSA <RSA@pgp.key>", signedUserID)
+
+	_, err = testPrivateKeyRing.Decrypt(ciphertext, testPublicKeyRing, pgp.GetUnixTime())
+	if err != nil {
+		t.Fatal("Expected no error when decrypting, got:", err)
+	}
 }

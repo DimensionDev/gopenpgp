@@ -43,7 +43,7 @@ func (keyRing *KeyRing) getRawEntities() openpgp.EntityList {
 	for _, de := range keyRing.Entities {
 		var rawPrivKey *packet.PrivateKey
 		if de.PrivateKey != nil {
-			rawPrivKey = &de.PrivateKey.PrivateKey
+			rawPrivKey = de.PrivateKey.PrivateKey
 		}
 		re := &openpgp.Entity{
 			PrimaryKey:  &de.PrimaryKey.PublicKey,
@@ -104,7 +104,7 @@ func (keyRing *KeyRing) Unlock(passphrase []byte) error {
 	for _, e := range keyRing.Entities {
 		// Entity.PrivateKey must be a signing key
 		if e.PrivateKey != nil {
-			keys = append(keys, &e.PrivateKey.PrivateKey)
+			keys = append(keys, e.PrivateKey.PrivateKey)
 		}
 
 		// Entity.Subkeys can be used for encryption
@@ -112,7 +112,7 @@ func (keyRing *KeyRing) Unlock(passphrase []byte) error {
 			if subKey.PrivateKey != nil && (!subKey.Sig.FlagsValid || subKey.Sig.FlagEncryptStorage ||
 				subKey.Sig.FlagEncryptCommunications) {
 
-				keys = append(keys, subKey.PrivateKey)
+				keys = append(keys, subKey.PrivateKey.PrivateKey)
 			}
 		}
 	}
@@ -247,7 +247,7 @@ func (keyRing *KeyRing) CheckPassphrase(passphrase string) bool {
 
 	for _, entity := range keyRing.Entities {
 		if entity.PrivateKey != nil {
-			keys = append(keys, &entity.PrivateKey.PrivateKey)
+			keys = append(keys, entity.PrivateKey.PrivateKey)
 		}
 	}
 	var decryptError error
@@ -389,7 +389,7 @@ func FilterExpiredKeys(contactKeys []*KeyRing) (filteredKeys []*KeyRing, err err
 			hasExpired := false
 			hasUnexpired := false
 			for _, subkey := range entity.Subkeys {
-				if subkey.PublicKey.KeyExpired(subkey.Sig, now) {
+				if subkey.PublicKey.KeyExpired(&subkey.Sig.Signature, now) {
 					hasExpired = true
 				} else {
 					hasUnexpired = true
@@ -424,7 +424,7 @@ func genDMSEntities(rawEntities openpgp.EntityList) []*KeyEntity {
 		if e.PrivateKey != nil {
 			newPrivKey := new(PrivateKey)
 			newPrivKey.PublicKey = PublicKey{e.PrivateKey.PublicKey}
-			newPrivKey.PrivateKey = *e.PrivateKey
+			newPrivKey.PrivateKey = e.PrivateKey
 			de.PrivateKey = newPrivKey
 		}
 
@@ -438,7 +438,11 @@ func genDMSEntities(rawEntities openpgp.EntityList) []*KeyEntity {
 
 		var subkeys []Subkey
 		for _, sk := range e.Subkeys {
-			subkeys = append(subkeys, Subkey{sk})
+			newSubPubKey := &PublicKey{*sk.PublicKey}
+			newSubPrivKey := new(PrivateKey)
+			newSubPrivKey.PublicKey = *newSubPubKey
+			newSubPrivKey.PrivateKey = sk.PrivateKey
+			subkeys = append(subkeys, Subkey{newSubPubKey, newSubPrivKey, &Signature{*sk.Sig}})
 		}
 		de.Subkeys = subkeys
 

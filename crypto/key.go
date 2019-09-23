@@ -277,7 +277,7 @@ func (p *PublicKey) GetArmored(headerKey string, headerValue string) (string, er
 
 type PrivateKey struct {
 	PublicKey
-	packet.PrivateKey
+	*packet.PrivateKey
 }
 
 func (privKey *PrivateKey) GetEncrypted() bool {
@@ -376,7 +376,10 @@ func genRawIdentityMap(identityMap []*Identity) map[string]*openpgp.Identity {
 }
 
 type Subkey struct {
-	openpgp.Subkey
+	// openpgp.Subkey
+	PublicKey  *PublicKey
+	PrivateKey *PrivateKey
+	Sig        *Signature
 }
 
 type KeyEntity struct {
@@ -399,10 +402,21 @@ func (k *KeyEntity) GetIdentity(index int) (*Identity, error) {
 	return k.Identities[index], nil
 }
 
+func (k *KeyEntity) GetSubkeyCount() int {
+	return len(k.Subkeys)
+}
+
+func (k *KeyEntity) GetSubkey(index int) (*Subkey, error) {
+	if index >= len(k.Subkeys) {
+		return nil, errors.New("openpgp: index out of bounds, there are only " + string(len(k.Subkeys)) + "subkeys")
+	}
+	return &k.Subkeys[index], nil
+}
+
 func (k *KeyEntity) getRawEntity() *openpgp.Entity {
 	var rawPrivKey *packet.PrivateKey
 	if k.PrivateKey != nil {
-		rawPrivKey = &k.PrivateKey.PrivateKey
+		rawPrivKey = k.PrivateKey.PrivateKey
 	}
 	return &openpgp.Entity{
 		PrimaryKey:  &k.PrimaryKey.PublicKey,
@@ -424,7 +438,11 @@ func (k *KeyEntity) getRawRevocations() []*packet.Signature {
 func (k *KeyEntity) getRawSubkeys() []openpgp.Subkey {
 	var subkeys []openpgp.Subkey
 	for _, s := range k.Subkeys {
-		subkeys = append(subkeys, s.Subkey)
+		subkeys = append(subkeys, openpgp.Subkey{
+			PublicKey:  &s.PublicKey.PublicKey,
+			PrivateKey: s.PrivateKey.PrivateKey,
+			Sig:        &s.Sig.Signature,
+		})
 	}
 	return subkeys
 }
@@ -478,14 +496,14 @@ func (el KeyEntityList) KeysById(id uint64) (keys []openpgp.Key) {
 			}
 			var rawPrivKey *packet.PrivateKey
 			if e.PrivateKey != nil {
-				rawPrivKey = &e.PrivateKey.PrivateKey
+				rawPrivKey = e.PrivateKey.PrivateKey
 			}
 			keys = append(keys, openpgp.Key{e.getRawEntity(), &e.PrimaryKey.PublicKey, rawPrivKey, selfSig})
 		}
 
 		for _, subKey := range e.Subkeys {
 			if subKey.PublicKey.KeyId == id {
-				keys = append(keys, openpgp.Key{e.getRawEntity(), subKey.PublicKey, subKey.PrivateKey, subKey.Sig})
+				keys = append(keys, openpgp.Key{e.getRawEntity(), &subKey.PublicKey.PublicKey, subKey.PrivateKey.PrivateKey, &subKey.Sig.Signature})
 			}
 		}
 	}
@@ -534,7 +552,7 @@ func (el KeyEntityList) DecryptionKeys() (keys []openpgp.Key) {
 	for _, e := range el {
 		for _, subKey := range e.Subkeys {
 			if subKey.PrivateKey != nil && (!subKey.Sig.FlagsValid || subKey.Sig.FlagEncryptStorage || subKey.Sig.FlagEncryptCommunications) {
-				keys = append(keys, openpgp.Key{e.getRawEntity(), subKey.PublicKey, subKey.PrivateKey, subKey.Sig})
+				keys = append(keys, openpgp.Key{e.getRawEntity(), &subKey.PublicKey.PublicKey, subKey.PrivateKey.PrivateKey, &subKey.Sig.Signature})
 			}
 		}
 	}
