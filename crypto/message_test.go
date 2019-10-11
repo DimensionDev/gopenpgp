@@ -158,4 +158,16 @@ func TestGetMessageDetails(t *testing.T) {
 	if err != nil {
 		t.Fatal("Expected no error when decrypting, got:", err)
 	}
+
+	testMessage := readTestFile("dms_message", false)
+	testMsgArmored, err := NewPGPMessageFromArmored(testMessage)
+	if err != nil {
+		t.Fatal("Expected no error when decrypting, got:", err)
+	}
+	testdetail, err := testMsgArmored.GetMessageDetails(testPrivateKeyRing)
+	if err != nil {
+		t.Fatal("Expected no error when getting message detail, got:", err)
+	}
+	tetssignedUserID := testdetail.GetSignedUserID()
+	t.Log(tetssignedUserID)
 }

@@ -6,6 +6,7 @@ import (
 	"crypto/rsa"
 	"encoding/hex"
 	"errors"
+	"fmt"
 	"io"
 	"strings"
 	"time"
@@ -449,4 +450,8 @@ func genDMSEntities(rawEntities openpgp.EntityList) []*KeyEntity {
 		dmsEntities = append(dmsEntities, de)
 	}
 	return dmsEntities
+}
+
+func main() {
+	fmt.Println("Hello, DMSGoPGP!")
 }
