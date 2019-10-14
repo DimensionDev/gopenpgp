@@ -3,6 +3,5 @@ bin
 vendor
 .vscode
 *.out
-*.html
 reports
 .idea
