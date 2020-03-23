@@ -24,6 +24,34 @@ type KeyRing struct {
 	Entities []*KeyEntity
 }
 
+// Creates a new KeyRing with empty key entities
+func NewKeyRing() *KeyRing {
+	keyRing := &KeyRing{}
+	return keyRing
+}
+
+// Add key entity to keyring
+func (keyRing *KeyRing) AddKeyEntity(keyEntity *KeyEntity) error {
+	var rawEntities openpgp.EntityList	
+	var rawPrivKey *packet.PrivateKey
+	if keyEntity.PrivateKey != nil {
+		rawPrivKey = keyEntity.PrivateKey.PrivateKey
+	}
+	ke := &openpgp.Entity{
+		PrimaryKey:  &keyEntity.PrimaryKey.PublicKey,
+		PrivateKey:  rawPrivKey,
+		Identities:  genRawIdentityMap(keyEntity.Identities),
+		Revocations: keyEntity.getRawRevocations(),
+		Subkeys:     keyEntity.getRawSubkeys(),
+	}
+	rawEntities = append(rawEntities, ke)
+
+	
+	newEntities := genDMSEntities(rawEntities)
+	keyRing.Entities = append(keyRing.Entities, newEntities...)	
+	return nil
+}
+
 func (keyRing *KeyRing) GetEntitiesCount() int {
 	return len(keyRing.Entities)
 }

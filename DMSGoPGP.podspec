@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = "DMSGoPGP"
-  spec.version      = "0.0.17"
+  spec.version      = "0.0.19"
   spec.summary      = "Mobile compatible OpenPGP library."
 
   spec.description  = <<-DESC

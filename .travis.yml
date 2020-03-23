@@ -1,6 +1,11 @@
+os: osx
 language: go
 go:
-  - 1.13.x
+- 1.13.x
 env:
-  - GO111MODULE=on GOFLAGS=-mod=readonly
-install: true
+- GO111MODULE=on
+install:
+- go get golang.org/x/mobile/cmd/gomobile
+- gomobile init
+script: 
+- ./build.sh

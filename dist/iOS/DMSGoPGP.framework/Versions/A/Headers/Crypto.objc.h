@@ -180,6 +180,7 @@ re-encrypts it with newPassphrase, and returns the new armored key.
 @property (nonatomic) CryptoSignature* _Nullable selfSignature;
 // skipped field Identity.Signatures with unsupported type: []*github.com/DimensionDev/gopenpgp/crypto.Signature
 
+- (BOOL)isPrimaryId;
 @end
 
 @interface CryptoKeyEntity : NSObject <goSeqRefInterface> {
@@ -209,9 +210,16 @@ re-encrypts it with newPassphrase, and returns the new armored key.
 @property(strong, readonly) _Nonnull id _ref;
 
 - (nonnull instancetype)initWithRef:(_Nonnull id)ref;
-- (nonnull instancetype)init;
+/**
+ * Creates a new KeyRing with empty key entities
+ */
+- (nullable instancetype)init;
 // skipped field KeyRing.Entities with unsupported type: []*github.com/DimensionDev/gopenpgp/crypto.KeyEntity
 
+/**
+ * Add key entity to keyring
+ */
+- (BOOL)addKeyEntity:(CryptoKeyEntity* _Nullable)keyEntity error:(NSError* _Nullable* _Nullable)error;
 /**
  * CheckPassphrase checks if private key passphrase is correct for every sub key.
  */
@@ -718,6 +726,11 @@ FOUNDATION_EXPORT CryptoClearTextMessage* _Nullable CryptoNewClearTextMessage(NS
  * NewClearTextMessageFromArmored returns the message body and unarmored signature from a clearsigned message.
  */
 FOUNDATION_EXPORT CryptoClearTextMessage* _Nullable CryptoNewClearTextMessageFromArmored(NSString* _Nullable signedMessage, NSError* _Nullable* _Nullable error);
+
+/**
+ * Creates a new KeyRing with empty key entities
+ */
+FOUNDATION_EXPORT CryptoKeyRing* _Nullable CryptoNewKeyRing(void);
 
 /**
  * NewPGPMessage generates a new PGPMessage from the unarmored binary data.
