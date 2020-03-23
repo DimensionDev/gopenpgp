@@ -180,6 +180,7 @@ re-encrypts it with newPassphrase, and returns the new armored key.
 @property (nonatomic) CryptoSignature* _Nullable selfSignature;
 // skipped field Identity.Signatures with unsupported type: []*github.com/DimensionDev/gopenpgp/crypto.Signature
 
+- (BOOL)isPrimaryId;
 @end
 
 @interface CryptoKeyEntity : NSObject <goSeqRefInterface> {

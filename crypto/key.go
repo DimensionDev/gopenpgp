@@ -402,6 +402,14 @@ func (k *KeyEntity) GetIdentity(index int) (*Identity, error) {
 	return k.Identities[index], nil
 }
 
+func (i *Identity) IsPrimaryId() bool {
+	if i.SelfSignature.IsPrimaryId == nil {
+		return false
+	} else {
+		return *i.SelfSignature.IsPrimaryId
+	}
+}
+
 func (k *KeyEntity) GetSubkeyCount() int {
 	return len(k.Subkeys)
 }
